@@ -35,6 +35,7 @@ typedef struct {
 
 Vector* new_vector();
 void vec_push(Vector*, void*);
+Token* add_token(Vector*, int, char*);
 
 Node* add();
 Node* mul();
@@ -69,10 +70,7 @@ void runtest() {
   printf("OK\n");
 }
 
-
-// トークナイズした結果のトークン列はこの配列に保存する
-// 100個以上のトークンは来ないものとする
-Token tokens[100];
+Vector* tokens;
 int pos = 0;
 
 Vector* new_vector() {
@@ -91,6 +89,14 @@ void vec_push(Vector* vec, void* elem) {
   vec->data[vec->len++] = elem;
 }
 
+Token* add_token(Vector* v, int ty, char* p) {
+  Token* t = malloc(sizeof(Token));
+  t->ty = ty;
+  t->input = p;
+  vec_push(v, t);
+  return t;
+}
+
 Node* new_node(int ty, Node* lhs, Node* rhs) {
   Node* node = malloc(sizeof(Node));
   node->ty = ty;
@@ -107,7 +113,8 @@ Node* new_node_num(int val) {
 }
 
 int consume(int ty) {
-  if (tokens[pos].ty != ty)
+  Token* t = tokens->data[pos];
+  if (t->ty != ty)
     return 0;
   pos++;
   return 1;
@@ -116,15 +123,20 @@ int consume(int ty) {
 Node* term() {
   if (consume('(')) {
     Node* node = add();
-    if (!consume(')'))
-      error("開きカッコに対応する閉じカッコがありません: %s", tokens[pos].input);
+    if (!consume(')')) {
+      Token* t = tokens->data[pos];
+      error("開きカッコに対応する閉じカッコがありません: %s", t->input);
+    }
     return node;
   }
 
-  if (tokens[pos].ty == TK_NUM)
-    return new_node_num(tokens[pos++].val);
+  if (consume(TK_NUM)) {
+    Token* t = tokens->data[pos++];
+    return new_node_num(t->val);
+  }
 
-  error("数値でも開きカッコでもないトークンです: %s", tokens[pos].input);
+  Token* t = tokens->data[pos];
+  error("数値でも開きカッコでもないトークンです: %s", t->input);
 }
 
 Node* mul() {
@@ -195,8 +207,9 @@ void error(char* fmt, ...) {
 }
 
 // pが指している文字列をトークンに分割してtokensに保存する
-void tokenize(char* p) {
-  int i = 0;
+Vector* tokenize(char* p) {
+  Vector* v = new_vector();
+  
   while (*p) {
     // 空白文字をスキップ
     if (isspace(*p)) {
@@ -207,18 +220,14 @@ void tokenize(char* p) {
     if (*p == '+' || *p == '-' ||
 	*p == '*' || *p == '/' ||
 	*p == '(' || *p == ')') {
-      tokens[i].ty = *p;
-      tokens[i].input = p;
-      i++;
+      add_token(v, *p, p);
       p++;
       continue;
     }
 
     if (isdigit(*p)) {
-      tokens[i].ty = TK_NUM;
-      tokens[i].input = p;
-      tokens[i].val = strtol(p, &p, 10);
-      i++;
+      Token* t = add_token(v, TK_NUM, p);
+      t->val = strtol(p, &p, 10);
       continue;
     }
 
@@ -226,8 +235,11 @@ void tokenize(char* p) {
     exit(1);
   }
 
-  tokens[i].ty = TK_EOF;
-  tokens[i].input = p;
+  add_token(v, TK_EOF, p);
+
+  fprintf(stderr, "DEBUG: %d\n",v->len);
+  
+  return v;
 }
 
 int main(int argc, char** argv) {
@@ -241,12 +253,11 @@ int main(int argc, char** argv) {
     runtest();
     return 0;
   }
-    
 
   // トークナイズしてパースする
-  tokenize(argv[1]);
+  tokens = tokenize(argv[1]);
+  pos = 0;
   Node* node = add();
-  
 
   // アセンブリの前半部分を出力
   printf(".intel_syntax noprefix\n");
