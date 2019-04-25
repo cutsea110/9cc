@@ -27,6 +27,15 @@ typedef struct Node {
   int val;          // tyがND_NUMの場合のみ使う
 } Node;
 
+typedef struct {
+  void** data;      // データ本体
+  int capacity;     // バッファの大きさ(data[0]~data[capacity-1]がバッファ領域)
+  int len;          // ベクタに追加済みの要素数
+} Vector;
+
+Vector* new_vector();
+void vec_push(Vector*, void*);
+
 Node* add();
 Node* mul();
 Node* term();
@@ -35,10 +44,52 @@ void error(char*, ...);
 Node* new_node(int, Node*, Node*);
 Node* new_node_num(int);
 
+int expect(int, int, int);
+void runtest();
+
+int expect(int line, int expected, int actual) {
+  if (expected == actual)
+    return 1;
+  fprintf(stderr, "%d: %d expected, but got %d\n", line, expected, actual);
+  exit(1);
+}
+
+void runtest() {
+  Vector* vec = new_vector();
+  expect(__LINE__, 0, vec->len);
+
+  for (int i = 0; i < 100; i++)
+    vec_push(vec, (void*)i);
+
+  expect(__LINE__, 100, vec->len);
+  expect(__LINE__, 0, (int)vec->data[0]);
+  expect(__LINE__, 50, (int)vec->data[50]);
+  expect(__LINE__, 99, (int)vec->data[99]);
+
+  printf("OK\n");
+}
+
+
 // トークナイズした結果のトークン列はこの配列に保存する
 // 100個以上のトークンは来ないものとする
 Token tokens[100];
 int pos = 0;
+
+Vector* new_vector() {
+  Vector* vec = malloc(sizeof(Vector));
+  vec->data = malloc(sizeof(void*) * 16);
+  vec->capacity = 16;
+  vec->len = 0;
+  return vec;
+}
+
+void vec_push(Vector* vec, void* elem) {
+  if (vec->capacity == vec->len) {
+    vec->capacity *= 2;
+    vec->data = realloc(vec->data, sizeof(void*) * vec->capacity);
+  }
+  vec->data[vec->len++] = elem;
+}
 
 Node* new_node(int ty, Node* lhs, Node* rhs) {
   Node* node = malloc(sizeof(Node));
@@ -184,6 +235,13 @@ int main(int argc, char** argv) {
     fprintf(stderr, "引数の個数が正しくありません\n");
     return 1;
   }
+
+  char* test = "-test";
+  if (strcmp(argv[1], test) == 0) {
+    runtest();
+    return 0;
+  }
+    
 
   // トークナイズしてパースする
   tokenize(argv[1]);
