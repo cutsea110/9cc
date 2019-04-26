@@ -42,6 +42,7 @@ Node* mul();
 Node* term();
 int consume(int);
 void error(char*, ...);
+void debug(char*, ...);
 Node* new_node(int, Node*, Node*);
 Node* new_node_num(int);
 
@@ -102,6 +103,7 @@ Node* new_node(int ty, Node* lhs, Node* rhs) {
   node->ty = ty;
   node->lhs = lhs;
   node->rhs = rhs;
+  debug("return new_node");
   return node;
 }
 
@@ -109,6 +111,7 @@ Node* new_node_num(int val) {
   Node* node = malloc(sizeof(Node));
   node->ty = ND_NUM;
   node->val = val;
+  debug("return new_node_num");
   return node;
 }
 
@@ -121,47 +124,63 @@ int consume(int ty) {
 }
 
 Node* term() {
+  debug("Entry term");
+  
   if (consume('(')) {
+    debug("'(' Found");
     Node* node = add();
     if (!consume(')')) {
+      debug("')' NOT Found");
       Token* t = tokens->data[pos];
       error("開きカッコに対応する閉じカッコがありません: %s", t->input);
     }
+    debug("')' Found");
     return node;
   }
 
-  if (consume(TK_NUM)) {
-    Token* t = tokens->data[pos++];
+  Token* t = tokens->data[pos];
+  if (t->ty == TK_NUM) {
+    debug("TK_NUM Found at position(%d) = %d", pos, t->val);
+    pos++;
     return new_node_num(t->val);
   }
 
-  Token* t = tokens->data[pos];
   error("数値でも開きカッコでもないトークンです: %s", t->input);
 }
 
 Node* mul() {
+  debug("Entry mul");
   Node* node = term();
 
   for (;;) {
-    if (consume('*'))
+    if (consume('*')) {
+      debug("'*' Found");
       node = new_node('*', node, term());
-    else if (consume('/'))
+    } else if (consume('/')) {
+      debug("'/' Found");
       node = new_node('/', node, term());
-    else
+    } else {
+      debug("return mul");
       return node;
+    }
   }
 }
 
 Node* add() {
+  debug("Entry add");
   Node* node = mul();
 
   for (;;) {
-    if (consume('+'))
+    if (consume('+')) {
+      debug("'+' Found");
       node = new_node('+', node, mul());
-    else if (consume('-'))
+    } else if (consume('-')) {
+      debug("'-' Found");
       node = new_node('-', node, mul());
-    else
+    } else {
+      debug("return add");
       return node;
+    }
   }
 }
 
@@ -205,6 +224,16 @@ void error(char* fmt, ...) {
   fprintf(stderr, "\n");
   exit(1);
 }
+void debug(char* fmt, ...) {
+  /*
+  va_list ap;
+  fprintf(stderr, "DEBUG: ");
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  fprintf(stderr, "\n");
+  return;
+  */
+}
 
 // pが指している文字列をトークンに分割してtokensに保存する
 Vector* tokenize(char* p) {
@@ -237,8 +266,9 @@ Vector* tokenize(char* p) {
 
   add_token(v, TK_EOF, p);
 
-  fprintf(stderr, "DEBUG: %d\n",v->len);
-  
+  debug("tokens length %d",v->len);
+
+  pos = 0;
   return v;
 }
 
@@ -256,9 +286,7 @@ int main(int argc, char** argv) {
 
   // トークナイズしてパースする
   tokens = tokenize(argv[1]);
-  pos = 0;
   Node* node = add();
-
   // アセンブリの前半部分を出力
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
