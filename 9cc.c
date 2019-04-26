@@ -38,13 +38,10 @@ typedef struct {
   int len;          // ベクタに追加済みの要素数
 } Vector;
 
-int is_alnum(char c) {
-  return
-    ('a' <= c && c <= 'z') ||
-    ('A' <= c && c <= 'Z') ||
-    ('0' <= c && c <= '9') ||
-    (c == '_');
-}
+typedef struct {
+  Vector* keys;
+  Vector* vals;
+} Map;
 
 Vector* new_vector();
 void vec_push(Vector*, void*);
@@ -67,6 +64,33 @@ void gen(Node*);
 int expect(int, int, int);
 void runtest();
 
+int is_alnum(char c) {
+  return
+    ('a' <= c && c <= 'z') ||
+    ('A' <= c && c <= 'Z') ||
+    ('0' <= c && c <= '9') ||
+    (c == '_');
+}
+
+Map* new_map() {
+  Map* map = malloc(sizeof(Map));
+  map->keys = new_vector();
+  map->vals = new_vector();
+  return map;
+}
+
+void map_put(Map* map, char* key, void* val) {
+  vec_push(map->keys, key);
+  vec_push(map->vals, val);
+}
+
+void* map_get(Map* map, char* key) {
+  for (int i = map->keys->len - 1; i >= 0; i--)
+    if (strcmp(map->keys->data[i], key) == 0)
+      return map->vals->data[i];
+  return NULL;
+}
+
 int expect(int line, int expected, int actual) {
   if (expected == actual)
     return 1;
@@ -74,7 +98,7 @@ int expect(int line, int expected, int actual) {
   exit(1);
 }
 
-void runtest() {
+void test_vector() {
   Vector* vec = new_vector();
   expect(__LINE__, 0, vec->len);
 
@@ -85,7 +109,32 @@ void runtest() {
   expect(__LINE__, 0, (int)vec->data[0]);
   expect(__LINE__, 50, (int)vec->data[50]);
   expect(__LINE__, 99, (int)vec->data[99]);
+  
+  printf("Vector OK\n");
+}
 
+void test_map() {
+  Map* map = new_map();
+
+  expect(__LINE__, 0, (int)map_get(map, "foo"));
+
+  map_put(map, "foo", (void*)2);
+  expect(__LINE__, 2, (int)map_get(map, "foo"));
+  
+  map_put(map, "bar", (void*)4);
+  expect(__LINE__, 4, (int)map_get(map, "bar"));
+  expect(__LINE__, 2, (int)map_get(map, "foo"));
+
+  map_put(map, "foo", (void*)6);
+  expect(__LINE__, 6, (int)map_get(map, "foo"));
+  expect(__LINE__, 4, (int)map_get(map, "bar"));
+
+  printf("Map OK\n");
+}
+
+void runtest() {
+  test_vector();
+  test_map();
   printf("OK\n");
 }
 
