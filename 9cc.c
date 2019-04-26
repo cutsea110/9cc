@@ -8,12 +8,14 @@
 enum {
       TK_NUM = 256, // 整数トークン
       TK_IDENT,     // 識別子
+      TK_RETURN,    // return
       TK_EOF,       // 入力の終端を表すトークン
 };
 
 enum {
       ND_NUM = 256, // 整数のノードの型
       ND_IDENT,     // 識別子
+      ND_RETURN,    // return
 };
 
 typedef struct {
@@ -35,6 +37,14 @@ typedef struct {
   int capacity;     // バッファの大きさ(data[0]~data[capacity-1]がバッファ領域)
   int len;          // ベクタに追加済みの要素数
 } Vector;
+
+int is_alnum(char c) {
+  return
+    ('a' <= c && c <= 'z') ||
+    ('A' <= c && c <= 'Z') ||
+    ('0' <= c && c <= '9') ||
+    (c == '_');
+}
 
 Vector* new_vector();
 void vec_push(Vector*, void*);
@@ -143,7 +153,16 @@ Node* assign() {
 
 Node* stmt() {
   DEBUG("Entry stmt");
-  Node* node = assign();
+  Node* node;
+  
+  if (consume(TK_RETURN)) {
+    node = malloc(sizeof(Node));
+    node->ty = ND_RETURN;
+    node->lhs = assign();
+  } else {
+    node = assign();
+  }
+  
   if (!consume(';')) {
     DEBUG("';' NOT Found");
     Token* t = tokens->data[pos];
@@ -247,6 +266,15 @@ void gen_lval(Node* node) {
 }
 
 void gen(Node* node) {
+  if (node->ty == ND_RETURN) {
+    gen(node->lhs);
+    printf("  pop rax\n");
+    printf("  mov rsp, rbp\n");
+    printf("  pop rbp\n");
+    printf("  ret\n");
+    return;
+  }
+  
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);
     return;
@@ -305,12 +333,14 @@ void error(char* fmt, ...) {
   exit(1);
 }
 void DEBUG(char* fmt, ...) {
+  /*
   va_list ap;
   fprintf(stderr, "DEBUG: ");
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
   fprintf(stderr, "\n");
   return;
+  */
 }
 
 // pが指している文字列をトークンに分割してtokensに保存する
@@ -321,6 +351,12 @@ Vector* tokenize(char* p) {
     // 空白文字をスキップ
     if (isspace(*p)) {
       p++;
+      continue;
+    }
+
+    if (strncmp(p, "return", 6) == 0 && !is_alnum(p[6])) {
+      add_token(v, TK_RETURN, p);
+      p += 6;
       continue;
     }
 
