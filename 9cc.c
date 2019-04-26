@@ -7,24 +7,27 @@
 // トークンの型を表す値
 enum {
       TK_NUM = 256, // 整数トークン
+      TK_IDENT,     // 識別子
       TK_EOF,       // 入力の終端を表すトークン
 };
 
 enum {
       ND_NUM = 256, // 整数のノードの型
+      ND_IDENT,     // 識別子
 };
 
 typedef struct {
   int ty;           // トークンの型
-  int val;          // tyがTK_NUMの場合,その数値
+  int val;          // tyがTK_NUMの場合その数値
   char* input;      // トークン文字列(エラーメッセージ用)
 } Token;
 
 typedef struct Node {
-  int ty;           // 演算子かND_NUM
+  int ty;           // 演算子かND_NUM,ND_IDENT
   struct Node* lhs; // 左辺
   struct Node* rhs; // 右辺
-  int val;          // tyがND_NUMの場合のみ使う
+  int val;          // tyがND_NUMの場合その数値
+  char name;        // ND_IDENTの場合のみ使う
 } Node;
 
 typedef struct {
@@ -37,6 +40,9 @@ Vector* new_vector();
 void vec_push(Vector*, void*);
 Token* add_token(Vector*, int, char*);
 
+Node* assign();
+Node* stmt();
+void program();
 Node* add();
 Node* mul();
 Node* term();
@@ -45,6 +51,8 @@ void error(char*, ...);
 void DEBUG(char*, ...);
 Node* new_node(int, Node*, Node*);
 Node* new_node_num(int);
+void gen_lval(Node*);
+void gen(Node*);
 
 int expect(int, int, int);
 void runtest();
@@ -73,6 +81,7 @@ void runtest() {
 
 Vector* tokens;
 int pos = 0;
+Node* code[100];
 
 Vector* new_vector() {
   Vector* vec = malloc(sizeof(Vector));
@@ -115,6 +124,45 @@ Node* new_node_num(int val) {
   return node;
 }
 
+Node* new_node_ident(char name) {
+  Node* node = malloc(sizeof(Node));
+  node->ty = ND_IDENT;
+  node->name = name;
+  DEBUG("return new_node_ident");
+  return node;
+}
+
+Node* assign() {
+  DEBUG("Entry assign");
+  Node* node = add();
+  while(consume('=')) {
+    node = new_node('=', node, assign());
+  }
+  return node;
+}
+
+Node* stmt() {
+  DEBUG("Entry stmt");
+  Node* node = assign();
+  if (!consume(';')) {
+    DEBUG("';' NOT Found");
+    Token* t = tokens->data[pos];
+    error("';'ではないトークンです: %s", t->input);
+  }
+  DEBUG("';' Found");
+  return node;
+}
+
+void program() {
+  DEBUG("Entry program");
+  int i = 0;
+  while (((Token*)tokens->data[pos])->ty != TK_EOF) {
+    DEBUG("add stmt at code[%d]", i);
+    code[i++] = stmt();
+  }
+  code[i] = NULL;
+}
+
 int consume(int ty) {
   Token* t = tokens->data[pos];
   if (t->ty != ty)
@@ -139,6 +187,11 @@ Node* term() {
   }
 
   Token* t = tokens->data[pos];
+  if (t->ty == TK_IDENT) {
+    DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
+    pos++;
+    return new_node_ident(*(t->input));
+  }
   if (t->ty == TK_NUM) {
     DEBUG("TK_NUM Found at position(%d) = %d", pos, t->val);
     pos++;
@@ -184,9 +237,36 @@ Node* add() {
   }
 }
 
+void gen_lval(Node* node) {
+  if (node->ty != ND_IDENT)
+    error("代入の左辺値が変数ではありません");
+  int offset = ('z' - node->name + 1) * 8;
+  printf("  mov rax, rbp\n");
+  printf("  sub rax, %d\n", offset);
+  printf("  push rax\n");
+}
+
 void gen(Node* node) {
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);
+    return;
+  }
+
+  if (node->ty == ND_IDENT) {
+    gen_lval(node);
+    printf("  pop rax\n");
+    printf("  mov rax, [rax]\n");
+    printf("  push rax\n");
+    return;
+  }
+
+  if (node->ty == '=') {
+    gen_lval(node->lhs);
+    gen(node->rhs);
+    printf("  pop rdi\n");
+    printf("  pop rax\n");
+    printf("  mov [rax], rdi\n");
+    printf("  push rdi\n");
     return;
   }
 
@@ -225,14 +305,12 @@ void error(char* fmt, ...) {
   exit(1);
 }
 void DEBUG(char* fmt, ...) {
-  /*
   va_list ap;
   fprintf(stderr, "DEBUG: ");
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
   fprintf(stderr, "\n");
   return;
-  */
 }
 
 // pが指している文字列をトークンに分割してtokensに保存する
@@ -246,9 +324,16 @@ Vector* tokenize(char* p) {
       continue;
     }
 
+    if ('a' <= *p && *p <= 'z') {
+      Token* t = add_token(v, TK_IDENT, p);
+      p++;
+      continue;
+    }
+
     if (*p == '+' || *p == '-' ||
 	*p == '*' || *p == '/' ||
-	*p == '(' || *p == ')') {
+	*p == '(' || *p == ')' ||
+	*p == '=' || *p == ';') {
       add_token(v, *p, p);
       p++;
       continue;
@@ -285,19 +370,33 @@ int main(int argc, char** argv) {
   }
 
   // トークナイズしてパースする
+  // 結果はcodeに保存される
   tokens = tokenize(argv[1]);
-  Node* node = add();
+  program();
+  
   // アセンブリの前半部分を出力
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
 
-  // 抽象構文木を下りながらコード生成
-  gen(node);
+  // プロローグ
+  // 変数26個分の領域を確保する
+  printf("  push rbp\n");
+  printf("  mov rbp, rsp\n");
+  printf("  sub rsp, 208\n"); // 26 * 8 = 208
 
-  // スタックトップに式全体の値が残っているはずなので
-  // それをraxにロードして関数からの返り値とする
-  printf("  pop rax\n");
+  // 先頭の式から順にコード生成
+  for (int i = 0; code[i]; i++) {
+    gen(code[i]);
+    // 式の評価結果としてスタックに一つの値が残っているはずなので
+    // スタックが溢れないようにポップしておく
+    printf("  pop rax\n");
+  }
+
+  // エピローグ
+  // 最後の式の結果がraxに残っているはずなのでそれが返り値になる
+  printf("  mov rsp, rbp\n");
+  printf("  pop rbp\n");
   printf("  ret\n");
   return 0;
 }
