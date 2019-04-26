@@ -21,6 +21,7 @@ enum {
 typedef struct {
   int ty;           // トークンの型
   int val;          // tyがTK_NUMの場合その数値
+  char* name;       // tyがTK_IDENTの場合その名前
   char* input;      // トークン文字列(エラーメッセージ用)
 } Token;
 
@@ -46,7 +47,11 @@ typedef struct {
 Vector* new_vector();
 void vec_push(Vector*, void*);
 Token* add_token(Vector*, int, char*);
+Map* new_map();
+void map_put(Map*, char*, void*);
+void* map_get(Map*, char*);
 
+int is_alnum(char);
 Node* assign();
 Node* stmt();
 void program();
