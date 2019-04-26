@@ -42,7 +42,7 @@ Node* mul();
 Node* term();
 int consume(int);
 void error(char*, ...);
-void debug(char*, ...);
+void DEBUG(char*, ...);
 Node* new_node(int, Node*, Node*);
 Node* new_node_num(int);
 
@@ -103,7 +103,7 @@ Node* new_node(int ty, Node* lhs, Node* rhs) {
   node->ty = ty;
   node->lhs = lhs;
   node->rhs = rhs;
-  debug("return new_node");
+  DEBUG("return new_node");
   return node;
 }
 
@@ -111,7 +111,7 @@ Node* new_node_num(int val) {
   Node* node = malloc(sizeof(Node));
   node->ty = ND_NUM;
   node->val = val;
-  debug("return new_node_num");
+  DEBUG("return new_node_num");
   return node;
 }
 
@@ -124,23 +124,23 @@ int consume(int ty) {
 }
 
 Node* term() {
-  debug("Entry term");
+  DEBUG("Entry term");
   
   if (consume('(')) {
-    debug("'(' Found");
+    DEBUG("'(' Found");
     Node* node = add();
     if (!consume(')')) {
-      debug("')' NOT Found");
+      DEBUG("')' NOT Found");
       Token* t = tokens->data[pos];
       error("開きカッコに対応する閉じカッコがありません: %s", t->input);
     }
-    debug("')' Found");
+    DEBUG("')' Found");
     return node;
   }
 
   Token* t = tokens->data[pos];
   if (t->ty == TK_NUM) {
-    debug("TK_NUM Found at position(%d) = %d", pos, t->val);
+    DEBUG("TK_NUM Found at position(%d) = %d", pos, t->val);
     pos++;
     return new_node_num(t->val);
   }
@@ -149,36 +149,36 @@ Node* term() {
 }
 
 Node* mul() {
-  debug("Entry mul");
+  DEBUG("Entry mul");
   Node* node = term();
 
   for (;;) {
     if (consume('*')) {
-      debug("'*' Found");
+      DEBUG("'*' Found");
       node = new_node('*', node, term());
     } else if (consume('/')) {
-      debug("'/' Found");
+      DEBUG("'/' Found");
       node = new_node('/', node, term());
     } else {
-      debug("return mul");
+      DEBUG("return mul");
       return node;
     }
   }
 }
 
 Node* add() {
-  debug("Entry add");
+  DEBUG("Entry add");
   Node* node = mul();
 
   for (;;) {
     if (consume('+')) {
-      debug("'+' Found");
+      DEBUG("'+' Found");
       node = new_node('+', node, mul());
     } else if (consume('-')) {
-      debug("'-' Found");
+      DEBUG("'-' Found");
       node = new_node('-', node, mul());
     } else {
-      debug("return add");
+      DEBUG("return add");
       return node;
     }
   }
@@ -224,7 +224,7 @@ void error(char* fmt, ...) {
   fprintf(stderr, "\n");
   exit(1);
 }
-void debug(char* fmt, ...) {
+void DEBUG(char* fmt, ...) {
   /*
   va_list ap;
   fprintf(stderr, "DEBUG: ");
@@ -266,7 +266,7 @@ Vector* tokenize(char* p) {
 
   add_token(v, TK_EOF, p);
 
-  debug("tokens length %d",v->len);
+  DEBUG("tokens length %d",v->len);
 
   pos = 0;
   return v;
