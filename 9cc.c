@@ -262,10 +262,15 @@ int consume(int ty) {
 }
 
 Node* unary() {
-  if (consume('+'))
+  DEBUG("Entry unary");
+  if (consume('+')) {
+    DEBUG("'+' Found");
     return term();
-  if (consume('-'))
+  }
+  if (consume('-')) {
+    DEBUG("'-' Found");
     return new_node('-', new_node_num(0), term());
+  }
   return term();
 }
 
@@ -301,15 +306,15 @@ Node* term() {
 
 Node* mul() {
   DEBUG("Entry mul");
-  Node* node = term();
+  Node* node = unary();
 
   for (;;) {
     if (consume('*')) {
       DEBUG("'*' Found");
-      node = new_node('*', node, term());
+      node = new_node('*', node, unary());
     } else if (consume('/')) {
       DEBUG("'/' Found");
-      node = new_node('/', node, term());
+      node = new_node('/', node, unary());
     } else {
       DEBUG("return mul");
       return node;
