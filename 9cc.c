@@ -261,6 +261,14 @@ int consume(int ty) {
   return 1;
 }
 
+Node* unary() {
+  if (consume('+'))
+    return term();
+  if (consume('-'))
+    return new_node('-', new_node_num(0), term());
+  return term();
+}
+
 Node* term() {
   DEBUG("Entry term");
   

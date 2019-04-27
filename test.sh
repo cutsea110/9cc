@@ -30,5 +30,6 @@ try 6 'foo = 1; bar = 2 + 3; return foo + bar;'
 try 4 'foo = 2; return foo * foo;'
 try 16 'foo = 2; bar = foo * foo; return bar * bar;'
 try 14 'foo = 2; bar = foo * foo; return (bar + foo) + (bar * foo);'
+try 35 'foo=2; bar = foo + 3; foo=7; return foo*bar;'
 
 echo OK
