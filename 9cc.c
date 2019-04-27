@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,7 +31,7 @@ typedef struct Node {
   struct Node* lhs; // 左辺
   struct Node* rhs; // 右辺
   int val;          // tyがND_NUMの場合その数値
-  char name;        // ND_IDENTの場合のみ使う
+  char* name;       // ND_IDENTの場合のみ使う
 } Node;
 
 typedef struct {
@@ -70,11 +71,7 @@ int expect(int, int, int);
 void runtest();
 
 int is_alnum(char c) {
-  return
-    ('a' <= c && c <= 'z') ||
-    ('A' <= c && c <= 'Z') ||
-    ('0' <= c && c <= '9') ||
-    (c == '_');
+  return isalpha(c) || isdigit(c) || c == '_';
 }
 
 Map* new_map() {
@@ -85,15 +82,33 @@ Map* new_map() {
 }
 
 void map_put(Map* map, char* key, void* val) {
+  DEBUG("Entry map_put for \"%s\"", key);
   vec_push(map->keys, key);
   vec_push(map->vals, val);
+  DEBUG("map size is %d", map->keys->len);
 }
 
 void* map_get(Map* map, char* key) {
+  DEBUG("Entry map_get");
   for (int i = map->keys->len - 1; i >= 0; i--)
-    if (strcmp(map->keys->data[i], key) == 0)
+    if (strcmp(map->keys->data[i], key) == 0) {
+      DEBUG("\"%s\" Found at %d", key, i);
       return map->vals->data[i];
+    }
+  DEBUG("\"%s\" NOT Found", key);
   return NULL;
+}
+
+int map_exists(Map* map, char* key) {
+  DEBUG("Entry map_exists for \"%s\"", key);
+  for (int i = map->keys->len - 1; i >= 0; i--) {
+    if (strcmp(map->keys->data[i], key) == 0) {
+      DEBUG("\"%s\" Found at %d", key, i);
+      return i;
+    }
+  }
+  DEBUG("\"%s\" NOT Found", key);
+  return -1;
 }
 
 int expect(int line, int expected, int actual) {
@@ -144,6 +159,7 @@ void runtest() {
 }
 
 Vector* tokens;
+Map* variables;
 int pos = 0;
 Node* code[100];
 
@@ -188,7 +204,7 @@ Node* new_node_num(int val) {
   return node;
 }
 
-Node* new_node_ident(char name) {
+Node* new_node_ident(char* name) {
   Node* node = malloc(sizeof(Node));
   node->ty = ND_IDENT;
   node->name = name;
@@ -263,7 +279,7 @@ Node* term() {
   if (t->ty == TK_IDENT) {
     DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
     pos++;
-    return new_node_ident(*(t->input));
+    return new_node_ident(t->name);
   }
   if (t->ty == TK_NUM) {
     DEBUG("TK_NUM Found at position(%d) = %d", pos, t->val);
@@ -313,9 +329,15 @@ Node* add() {
 void gen_lval(Node* node) {
   if (node->ty != ND_IDENT)
     error("代入の左辺値が変数ではありません");
-  int offset = ('z' - node->name + 1) * 8;
+
+  int offset = map_exists(variables, node->name);
+  if (offset == -1) {
+    map_put(variables, node->name, (void*)NULL);
+    offset = map_exists(variables, node->name);
+  }
+  DEBUG("\"%s\" Found with offset(%d)", node->name, offset);
   printf("  mov rax, rbp\n");
-  printf("  sub rax, %d\n", offset);
+  printf("  sub rax, %d\n", (offset + 1) * 8);
   printf("  push rax\n");
 }
 
@@ -414,16 +436,23 @@ Vector* tokenize(char* p) {
       continue;
     }
 
-    if ('a' <= *p && *p <= 'z') {
-      Token* t = add_token(v, TK_IDENT, p);
-      p++;
+    if (isalpha(*p) || *p == '_') {
+      int len = 1;
+      while (is_alnum(p[len]))
+	len++;
+      char* name = strndup(p, len);
+      int ty = (intptr_t)map_get(variables, name);
+      if (!ty) {
+	ty = TK_IDENT;
+	DEBUG("\"%s\" Found", name);
+      }
+      Token* t = add_token(v, ty, p);
+      t->name = name;
+      p += len;
       continue;
     }
-
-    if (*p == '+' || *p == '-' ||
-	*p == '*' || *p == '/' ||
-	*p == '(' || *p == ')' ||
-	*p == '=' || *p == ';') {
+    
+    if (strchr("+-*/()=;", *p)) {
       add_token(v, *p, p);
       p++;
       continue;
@@ -458,6 +487,8 @@ int main(int argc, char** argv) {
     runtest();
     return 0;
   }
+  
+  variables = new_map();
 
   // トークナイズしてパースする
   // 結果はcodeに保存される
