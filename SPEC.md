@@ -18,9 +18,13 @@ add: mul
 add: add "+" mul
 add: add "-" mul
 
-mul: term
-mul: mul "*" term
-mul: mul "/" term
+mul: unary
+mul: mul "*" unary
+mul: mul "/" unary
+
+unary: "+" term
+unary: "-" term
+unary: term
 
 term: num
 term: ident
