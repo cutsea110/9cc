@@ -27,5 +27,8 @@ try 15 'return 5*(9-6);'
 try 4 'return (3+5)/2;'
 
 try 6 'foo = 1; bar = 2 + 3; return foo + bar;'
+try 4 'foo = 2; return foo * foo;'
+try 16 'foo = 2; bar = foo * foo; return bar * bar;'
+try 14 'foo = 2; bar = foo * foo; return (bar + foo) + (bar * foo);'
 
 echo OK
