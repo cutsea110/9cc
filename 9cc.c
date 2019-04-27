@@ -160,6 +160,7 @@ void runtest() {
 
 Vector* tokens;
 Map* variables;
+int debug_flg = 0;
 int pos = 0;
 Node* code[100];
 
@@ -409,14 +410,14 @@ void error(char* fmt, ...) {
   exit(1);
 }
 void DEBUG(char* fmt, ...) {
-  /*
-  va_list ap;
-  fprintf(stderr, "DEBUG: ");
-  va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
-  fprintf(stderr, "\n");
+  if (debug_flg) {
+    va_list ap;
+    fprintf(stderr, "DEBUG: ");
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    fprintf(stderr, "\n");
+  }
   return;
-  */
 }
 
 // pが指している文字列をトークンに分割してtokensに保存する
@@ -477,22 +478,26 @@ Vector* tokenize(char* p) {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 2) {
+  char* test = "-test";
+  char* debug = "-d";
+  char* prog_code = argv[1];
+  
+  if (argc == 3 && strcmp(argv[1], debug) == 0) {
+    debug_flg = 1;
+    prog_code = argv[2];
+  } else if (argc != 2) {
     fprintf(stderr, "引数の個数が正しくありません\n");
     return 1;
-  }
-
-  char* test = "-test";
-  if (strcmp(argv[1], test) == 0) {
+  } else if (strcmp(argv[1], test) == 0) {
     runtest();
     return 0;
   }
-  
+
   variables = new_map();
 
   // トークナイズしてパースする
   // 結果はcodeに保存される
-  tokens = tokenize(argv[1]);
+  tokens = tokenize(prog_code);
   program();
   
   // アセンブリの前半部分を出力
