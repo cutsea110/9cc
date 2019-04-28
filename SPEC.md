@@ -11,8 +11,18 @@ program: e
 stmt: "return" assign ";"
 stmt: assign ";"
 
-assign: add
-assign: add "=" assign
+assign: relational
+assign: relational "=" assign
+
+equality: relational
+equality: equality "==" relational
+equality: equality "!=" relational
+
+relational: add
+relational: relational "<"  add
+relational: relational "<=" add
+relational: relational ">"  add
+relational: relational ">=" add
 
 add: mul
 add: add "+" mul

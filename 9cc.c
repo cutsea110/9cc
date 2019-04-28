@@ -10,6 +10,12 @@ enum {
       TK_NUM = 256, // 整数トークン
       TK_IDENT,     // 識別子
       TK_RETURN,    // return
+      TK_EQ,        // ==
+      TK_NE,        // !=
+      TK_GE,        // >=
+      TK_GT,        // >
+      TK_LE,        // <=
+      TK_LT,        // <
       TK_EOF,       // 入力の終端を表すトークン
 };
 
@@ -450,6 +456,42 @@ Vector* tokenize(char* p) {
       continue;
     }
 
+    if (strncmp(p, "==", 2) == 0) {
+      add_token(v, TK_EQ, p);
+      p += 2;
+      continue;
+    }
+    
+    if (strncmp(p, "!=", 2) == 0) {
+      add_token(v, TK_NE, p);
+      p += 2;
+      continue;
+    }
+
+    if (strncmp(p, ">=", 2) == 0) {
+      add_token(v, TK_GE, p);
+      p += 2;
+      continue;
+    }
+    
+    if (*p == '>') {
+      add_token(v, TK_GT, p);
+      p++;
+      continue;
+    }
+    
+    if (strncmp(p, "<=", 2) == 0) {
+      add_token(v, TK_LE, p);
+      p += 2;
+      continue;
+    }
+    
+    if (*p == '<') {
+      add_token(v, TK_LT, p);
+      p++;
+      continue;
+    }
+    
     if (isalpha(*p) || *p == '_') {
       int len = 1;
       while (is_alnum(p[len]))
