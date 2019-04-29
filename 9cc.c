@@ -10,6 +10,9 @@ enum {
       TK_NUM = 256, // 整数トークン
       TK_IDENT,     // 識別子
       TK_RETURN,    // return
+      TK_IF,        // if
+      TK_WHILE,     // while
+      TK_FOR,       // if
       TK_EQ,        // ==
       TK_NE,        // !=
       TK_GE,        // >=
@@ -566,6 +569,24 @@ Vector* tokenize(char* p) {
       continue;
     }
 
+    if (strncmp(p, "while", 5) == 0 && !is_alnum(p[5])) {
+      add_token(v, TK_WHILE, p);
+      p += 5;
+      continue;
+    }
+
+    if (strncmp(p, "for", 3) == 0 && !is_alnum(p[3])) {
+      add_token(v, TK_FOR, p);
+      p += 3;
+      continue;
+    }
+
+    if (strncmp(p, "if", 2) == 0 && !is_alnum(p[2])) {
+      add_token(v, TK_IF, p);
+      p += 2;
+      continue;
+    }
+
     if (strncmp(p, "==", 2) == 0) {
       add_token(v, TK_EQ, p);
       p += 2;
@@ -601,7 +622,7 @@ Vector* tokenize(char* p) {
       p++;
       continue;
     }
-    
+
     if (isalpha(*p) || *p == '_') {
       int len = 1;
       while (is_alnum(p[len]))
