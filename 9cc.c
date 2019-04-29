@@ -68,6 +68,7 @@ Node* term();
 int consume(int);
 void error(char*, ...);
 void DEBUG(char*, ...);
+void DUMP_TOKENS();
 Node* new_node(int, Node*, Node*);
 Node* new_node_num(int);
 void gen_lval(Node*);
@@ -163,6 +164,7 @@ void runtest() {
   test_map();
   printf("OK\n");
 }
+
 
 Vector* tokens;
 Map* variables;
@@ -428,6 +430,46 @@ void error(char* fmt, ...) {
   fprintf(stderr, "\n");
   exit(1);
 }
+void DUMP_TOKENS() {
+  for (int i = 0; i < tokens->len; i++) {
+    Token* t = tokens->data[i];
+    switch(t->ty) {
+    case TK_NUM:
+      fprintf(stderr, "%d at tokens[%d]\n",t->val , i);
+      break;
+    case TK_IDENT:
+      fprintf(stderr, "%s at tokens[%d]\n",t->name , i);
+      break;
+    case TK_EQ:
+      fprintf(stderr, "TK_EQ at tokens[%d]\n", i);
+      break;
+    case TK_NE:
+      fprintf(stderr, "TK_NE at tokens[%d]\n", i);
+      break;
+    case TK_GE:
+      fprintf(stderr, "TK_GE at tokens[%d]\n", i);
+      break;
+    case TK_GT:
+      fprintf(stderr, "TK_GT at tokens[%d]\n", i);
+      break;
+    case TK_LE:
+      fprintf(stderr, "TK_LE at tokens[%d]\n", i);
+      break;
+    case TK_LT:
+      fprintf(stderr, "TK_LT at tokens[%d]\n", i);
+      break;
+    case TK_RETURN:
+      fprintf(stderr, "TK_RETURN at tokens[%d]\n", i);
+      break;
+    case TK_EOF:
+      fprintf(stderr, "EOF at tokens[%d]\n", i);
+      break;
+    default:
+      fprintf(stderr, "%c at tokens[%d]\n",t->ty , i);
+      break;
+    }
+  }
+}
 void DEBUG(char* fmt, ...) {
   if (debug_flg) {
     va_list ap;
@@ -553,6 +595,8 @@ int main(int argc, char** argv) {
   // トークナイズしてパースする
   // 結果はcodeに保存される
   tokens = tokenize(prog_code);
+  if (debug_flg)
+    DUMP_TOKENS();
   program();
   
   // アセンブリの前半部分を出力
