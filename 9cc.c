@@ -454,6 +454,36 @@ void gen(Node* node) {
     printf("  mov rdx, 0\n");
     printf("  div rdi\n");
     break;
+  case TK_EQ:
+    printf("  cmp rdi, rax\n");
+    printf("  sete al\n");
+    printf("  movzb rax, al\n");
+    break;
+  case TK_NE:
+    printf("  cmp rdi, rax\n");
+    printf("  setne al\n");
+    printf("  movzb rax, al\n");
+    break;
+  case TK_GE:
+    printf("  cmp rdi, rax\n");
+    printf("  setle al\n");
+    printf("  movzb rax, al\n");
+    break;
+  case TK_GT:
+    printf("  cmp rdi, rax\n");
+    printf("  setl al\n");
+    printf("  movzb rax, al\n");
+    break;
+  case TK_LE:
+    printf("  cmp rax, rdi\n");
+    printf("  setle al\n");
+    printf("  movzb rax, al\n");
+    break;
+  case TK_LT:
+    printf("  cmp rax, rdi\n");
+    printf("  setl al\n");
+    printf("  movzb rax, al\n");
+    break;
   }
 
   printf("  push rax\n");

@@ -36,4 +36,13 @@ try 35 'foo=2; bar = foo + 3; foo=7; return foo*bar;'
 try 42 'return +42;'
 try 12 'foo=-3;bar=foo*-5;return foo+bar;'
 
+try 1 'return 42 == 42;'
+try 0 'return 42 != 42;'
+try 1 'return 3+4 <= 7;'
+try 1 'return (3+4) <= (3*4);'
+try 0 'return 4 <= 3;'
+try 0 'return 4 < 4;'
+try 0 'return 1 + 3 > 2 * 2;'
+try 1 'return 1 + 3 >= 2 * 2;'
+
 echo OK
