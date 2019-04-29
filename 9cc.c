@@ -435,37 +435,37 @@ void DUMP_TOKENS() {
     Token* t = tokens->data[i];
     switch(t->ty) {
     case TK_NUM:
-      fprintf(stderr, "%d at tokens[%d]\n",t->val , i);
+      fprintf(stderr, "tokens[%d]: %d\n",i, t->val);
       break;
     case TK_IDENT:
-      fprintf(stderr, "%s at tokens[%d]\n",t->name , i);
+      fprintf(stderr, "tokens[%d]: \"%s\"\n",i, t->name);
       break;
     case TK_EQ:
-      fprintf(stderr, "TK_EQ at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_EQ\n", i);
       break;
     case TK_NE:
-      fprintf(stderr, "TK_NE at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_NE\n", i);
       break;
     case TK_GE:
-      fprintf(stderr, "TK_GE at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_GE\n", i);
       break;
-    case TK_GT:
-      fprintf(stderr, "TK_GT at tokens[%d]\n", i);
+    case TK_GT: 
+      fprintf(stderr, "tokens[%d]: TK_GT\n", i);
       break;
     case TK_LE:
-      fprintf(stderr, "TK_LE at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_LE\n", i);
       break;
     case TK_LT:
-      fprintf(stderr, "TK_LT at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_LT\n", i);
       break;
     case TK_RETURN:
-      fprintf(stderr, "TK_RETURN at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_RETURN\n", i);
       break;
     case TK_EOF:
-      fprintf(stderr, "EOF at tokens[%d]\n", i);
+      fprintf(stderr, "tokens[%d]: TK_EOF\n", i);
       break;
     default:
-      fprintf(stderr, "%c at tokens[%d]\n",t->ty , i);
+      fprintf(stderr, "tokens[%d]: %c\n",i, t->ty);
       break;
     }
   }
