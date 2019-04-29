@@ -11,8 +11,8 @@ program: e
 stmt: "return" assign ";"
 stmt: assign ";"
 
-assign: relational
-assign: relational "=" assign
+assign: equality
+assign: equality "=" assign
 
 equality: relational
 equality: equality "==" relational

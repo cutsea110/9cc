@@ -62,6 +62,8 @@ int is_alnum(char);
 Node* assign();
 Node* stmt();
 void program();
+Node* equality();
+Node* relational();
 Node* add();
 Node* mul();
 Node* term();
@@ -223,7 +225,7 @@ Node* new_node_ident(char* name) {
 
 Node* assign() {
   DEBUG("Entry assign");
-  Node* node = add();
+  Node* node = equality();
   while(consume('=')) {
     node = new_node('=', node, assign());
   }
@@ -249,6 +251,42 @@ Node* stmt() {
   }
   DEBUG("';' Found");
   return node;
+}
+
+Node* equality() {
+  DEBUG("Entry equality");
+  Node* node = relational();
+  if (consume(TK_EQ)) {
+    DEBUG("\"==\" Found");
+    node = new_node(TK_EQ, node, relational());
+  } else if (consume(TK_NE)) {
+    DEBUG("\"!=\" Found");
+    node = new_node(TK_NE, node, relational());
+  } else {
+    DEBUG("return equality");
+    return node;
+  }
+}
+
+Node* relational() {
+  DEBUG("Entry relational");
+  Node* node = add();
+  if (consume(TK_GE)) {
+    DEBUG("\">=\" Found");
+    node = new_node(TK_GE, node, add());
+  } else if (consume(TK_GT)) {
+    DEBUG("\">\" Found");
+    node = new_node(TK_GT, node, add());
+  } else if (consume(TK_LE)) {
+    DEBUG("\"<=\" Found");
+    node = new_node(TK_LE, node, add());
+  } else if (consume(TK_LT)) {
+    DEBUG("\"<\" Found");
+    node = new_node(TK_LT, node, add());
+  } else {
+    DEBUG("return relational");
+    return node;
+  }
 }
 
 void program() {
