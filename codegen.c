@@ -91,6 +91,7 @@ void gen(Node* node) {
     }
     printf("  jmp .Lbegin%04d\n", lcnt);
     printf(".Lend%04d:\n", lcnt);
+    return;
   }
   
   if (node->ty == ND_NUM) {
