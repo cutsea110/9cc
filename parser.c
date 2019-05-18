@@ -233,14 +233,16 @@ Node* stmt() {
     DEBUG("\"for\" found");
     node = malloc(sizeof(Node));
     node->ty = ND_FOR;
+
+    Node* nop = malloc(sizeof(Node));
+    nop->ty = ND_NOP;
+    
     if (consume('(')) {
       Node* cond = malloc(sizeof(Node));
       cond->rhs = malloc(sizeof(Node));
 
       if (consume(';')) {
-	Node* ini = malloc(sizeof(Node));
-	ini->ty = ND_NOP;
-	cond->lhs = ini;
+	cond->lhs = nop;
       } else {
 	cond->lhs = expr();
 	if (!consume(';')) {
@@ -251,9 +253,7 @@ Node* stmt() {
       }
       
       if (consume(';')) {
-	Node* end = malloc(sizeof(Node));
-	end->ty = ND_NOP;
-	cond->rhs->lhs = end;
+	cond->rhs->lhs = nop;
       } else {
 	cond->rhs->lhs = expr();
 	if (!consume(';')) {
@@ -264,9 +264,7 @@ Node* stmt() {
       }
       
       if (consume(')')) {
-	Node* step = malloc(sizeof(Node));
-	step->ty = ND_NOP;
-	cond->rhs->rhs = step;
+	cond->rhs->rhs = nop;
       } else {
 	cond->rhs->rhs = expr();
 	if (!consume(')')) {
