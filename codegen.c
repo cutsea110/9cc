@@ -68,6 +68,25 @@ void gen(Node* node) {
     printf(".Lend%04d:\n", lcnt);
     return;
   }
+
+  if (node->ty == ND_FOR) {
+    int lcnt = ++label_count;
+    Node* cond = node->lhs;
+    if (cond->lhs->ty != ND_NOP)
+      gen(cond->lhs);
+    printf(".Lbegin%04d:\n", lcnt);
+    if (cond->rhs->lhs->ty != ND_NOP) {
+      gen(cond->rhs->lhs);
+      printf("  pop rax\n");
+      printf("  cmp rax, 0\n");
+      printf("  je .Lend%04d\n", lcnt);
+    }
+    gen(node->rhs);
+    if (cond->rhs->rhs->ty != ND_NOP)
+      gen(cond->rhs->rhs);
+    printf("  jmp .Lbegin%04d\n", lcnt);
+    printf(".Lend%04d:\n", lcnt);
+  }
   
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);

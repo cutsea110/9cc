@@ -41,7 +41,17 @@ try 0 'return 42 != 42;'
 try 1 'return 3+4 <= 7;'
 try 1 'return (3+4) <= (3*4);'
 try 0 'return 4 <= 3;'
+try 1 'return 4 <= 4;'
+try 1 'return 4 <= 5;'
+try 0 'return 4 < 3;'
 try 0 'return 4 < 4;'
+try 1 'return 4 < 5;'
+try 1 'return 4 >= 3;'
+try 1 'return 4 >= 4;'
+try 0 'return 4 >= 5;'
+try 1 'return 4 > 3;'
+try 0 'return 4 > 4;'
+try 0 'return 4 > 5;'
 try 0 'return 1 + 3 > 2 * 2;'
 try 1 'return 1 + 3 >= 2 * 2;'
 
@@ -52,6 +62,6 @@ try 3 'a = 1; if (42 == 41) a = a + 1; else a = a + 2; return a;'
 
 try 128 'i = 1; while (i <= 100) i = i * 2; return i;'
 
-
+try 55 'total = 0; for (i = 0; i < 4; i = i+1) total = total + i; return total;'
 
 echo OK
