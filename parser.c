@@ -296,7 +296,7 @@ Node* term() {
   
   if (consume('(')) {
     DEBUG("'(' Found");
-    Node* node = add();
+    Node* node = expr();
     if (!consume(')')) {
       DEBUG("')' NOT Found");
       Token* t = tokens->data[pos];

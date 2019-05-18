@@ -42,4 +42,4 @@ unary: term
 
 term: num
 term: ident
-term: "(" assign ")"
+term: "(" expr ")"
