@@ -32,15 +32,28 @@ void gen(Node* node) {
   }
 
   if (node->ty == ND_IF) {
-    label_count++;
-    int lcnt = label_count;
-    gen(node->lhs);
-    printf("  pop rax\n");
-    printf("  cmp rax, 0\n");
-    printf("  je  .Lend%04d\n", lcnt);
-    gen(node->rhs);
-    printf(".Lend%04d:\n", lcnt);
-    return;
+    if (node->rhs->ty == ND_ELSE) {
+      int lcnt = ++label_count;
+      gen(node->lhs);
+      printf("  pop rax\n");
+      printf("  cmp rax, 0\n");
+      printf("  je  .Lelse%04d\n", lcnt);
+      gen(node->rhs->lhs);
+      printf("  jmp .Lend%04d\n", lcnt);
+      printf(".Lelse%04d:\n", lcnt);
+      gen(node->rhs->rhs);
+      printf(".Lend%04d:\n", lcnt);
+      return;
+    } else {
+      int lcnt = ++label_count;
+      gen(node->lhs);
+      printf("  pop rax\n");
+      printf("  cmp rax, 0\n");
+      printf("  je  .Lend%04d\n", lcnt);
+      gen(node->rhs);
+      printf(".Lend%04d:\n", lcnt);
+      return;
+    }
   }
   
   if (node->ty == ND_NUM) {
