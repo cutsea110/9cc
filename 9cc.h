@@ -24,6 +24,7 @@ enum {
       ND_NUM = 256, // 整数のノードの型
       ND_IDENT,     // 識別子
       ND_RETURN,    // return
+      ND_IF,        // if
 };
 
 typedef struct {
