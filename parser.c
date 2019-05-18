@@ -80,6 +80,12 @@ Vector* tokenize(char* p) {
       continue;
     }
 
+    if (strncmp(p, "else", 4) == 0 && !is_alnum(p[4])) {
+      add_token(v, TK_ELSE, p);
+      p += 4;
+      continue;
+    }
+
     if (strncmp(p, "==", 2) == 0) {
       add_token(v, TK_EQ, p);
       p += 2;
