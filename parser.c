@@ -180,6 +180,23 @@ Node* stmt() {
     node = malloc(sizeof(Node));
     node->ty = ND_RETURN;
     node->lhs = expr();
+  } else if (consume(TK_IF)) {
+    node = malloc(sizeof(Node));
+    node->ty = ND_IF;
+    if (consume('(')) {
+      node->lhs = expr();
+      if (consume(')')) {
+	node->rhs = stmt();
+      } else {
+	DEBUG("')' NOT Found");
+	Token* t = tokens->data[pos];
+	error("'('ではないトークンです: %s", t->input);
+      }
+    } else {
+      DEBUG("'(' NOT Found");
+      Token* t = tokens->data[pos];
+      error("'('ではないトークンです: %s", t->input);
+    }
   } else {
     node = expr();
   }

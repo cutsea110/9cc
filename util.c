@@ -56,6 +56,18 @@ void DUMP_TOKENS() {
     case TK_RETURN:
       fprintf(stderr, "tokens[%d]: TK_RETURN\n", i);
       break;
+    case TK_IF:
+      fprintf(stderr, "tokens[%d]: TK_IF\n", i);
+      break;
+    case TK_ELSE:
+      fprintf(stderr, "tokens[%d]: TK_ELSE\n", i);
+      break;
+    case TK_FOR:
+      fprintf(stderr, "tokens[%d]: TK_FOR\n", i);
+      break;
+    case TK_WHILE:
+      fprintf(stderr, "tokens[%d]: TK_WHILE\n", i);
+      break;
     case TK_EOF:
       fprintf(stderr, "tokens[%d]: TK_EOF\n", i);
       break;
