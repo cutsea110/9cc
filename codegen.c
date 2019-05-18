@@ -72,18 +72,23 @@ void gen(Node* node) {
   if (node->ty == ND_FOR) {
     int lcnt = ++label_count;
     Node* cond = node->lhs;
-    if (cond->lhs->ty != ND_NOP)
+    if (cond->lhs->ty != ND_NOP) {
+      DEBUG("Initial expr Found");
       gen(cond->lhs);
+    }
     printf(".Lbegin%04d:\n", lcnt);
     if (cond->rhs->lhs->ty != ND_NOP) {
+      DEBUG("Terminal expr Found");
       gen(cond->rhs->lhs);
       printf("  pop rax\n");
       printf("  cmp rax, 0\n");
       printf("  je .Lend%04d\n", lcnt);
     }
     gen(node->rhs);
-    if (cond->rhs->rhs->ty != ND_NOP)
+    if (cond->rhs->rhs->ty != ND_NOP) {
+      DEBUG("Step expr Found");
       gen(cond->rhs->rhs);
+    }
     printf("  jmp .Lbegin%04d\n", lcnt);
     printf(".Lend%04d:\n", lcnt);
   }
