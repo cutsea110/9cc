@@ -35,7 +35,7 @@ try 16 'foo = 2; bar = foo * foo; return bar * bar;'
 try 14 'foo = 2; bar = foo * foo; return (bar + foo) + (bar * foo);'
 try 35 'foo=2; bar = foo + 3; foo=7; return foo*bar;'
 
-#try -1 'return -1;'
+try 255 'return -1;' # -1 ==> 255(shell)
 try 42 'return +42;'
 try 12 'foo=-3;bar=foo*-5;return foo+bar;'
 
@@ -65,7 +65,7 @@ try 3 'a = 1; if (42 == 41) a = a + 1; else a = a + 2; return a;'
 
 try 128 'i = 1; while (i <= 100) i = i * 2; return i;'
 
-try 10 'for (a = 0; a <= 10; a = a + 1) a ; return a;'
+try 10 'for (a=0;a<=10;a=a+1)a;return a;'
 try 45 'total = 0; for (i = 0; i < 10; i = i+1) total = total + i; return total;'
 try 10 'total = 0; for (; total <= 10;) total = total + 1; return total;'
 try 10 'for (total = 0; total <= 10;) total = total + 1; return total;'
