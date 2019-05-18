@@ -203,7 +203,7 @@ Node* stmt() {
       } else {
 	DEBUG("')' NOT Found");
 	Token* t = tokens->data[pos];
-	error("'('ではないトークンです: %s", t->input);
+	error("')'ではないトークンです: %s", t->input);
       }
     } else {
       DEBUG("'(' NOT Found");
@@ -222,10 +222,65 @@ Node* stmt() {
       } else {
 	DEBUG("')' NOT Found");
 	Token* t = tokens->data[pos];
-	error("'('ではないトークンです: %s", t->input);
+	error("')'ではないトークンです: %s", t->input);
       }
     } else {
-      DEBUG("')' NOT Found");
+      DEBUG("'(' NOT Found");
+      Token* t = tokens->data[pos];
+      error("'('ではないトークンです: %s", t->input);
+    }
+  } else if (consume(TK_FOR)) {
+    DEBUG("\"for\" found");
+    node = malloc(sizeof(Node));
+    node->ty = ND_FOR;
+    if (consume('(')) {
+      Node* cond = malloc(sizeof(Node));
+      cond->rhs = malloc(sizeof(Node));
+
+      if (consume(';')) {
+	Node* ini = malloc(sizeof(Node));
+	ini->ty = ND_NOP;
+	cond->lhs = ini;
+      } else {
+	cond->lhs = expr();
+	if (!consume(';')) {
+	  DEBUG("';' NOT Found");
+	  Token* t = tokens->data[pos];
+	  error("';'ではないトークンです: %s", t->input);
+	}
+      }
+      
+      if (consume(';')) {
+	Node* end = malloc(sizeof(Node));
+	end->ty = ND_NOP;
+	cond->rhs->lhs = end;
+      } else {
+	cond->rhs->lhs = expr();
+	if (!consume(';')) {
+	  DEBUG("';' NOT Found");
+	  Token* t = tokens->data[pos];
+	  error("';'ではないトークンです: %s", t->input);
+	}
+      }
+      
+      if (consume(')')) {
+	Node* step = malloc(sizeof(Node));
+	step->ty = ND_NOP;
+	cond->rhs->rhs = step;
+      } else {
+	cond->rhs->rhs = expr();
+	if (!consume(')')) {
+	  DEBUG("')' NOT Found");
+	  Token* t = tokens->data[pos];
+	  error("')'ではないトークンです: %s", t->input);
+	}
+      }
+
+      node->lhs = cond;
+      node->rhs = stmt();
+      return node;
+    } else {
+      DEBUG("'(' NOT Found");
       Token* t = tokens->data[pos];
       error("'('ではないトークンです: %s", t->input);
     }

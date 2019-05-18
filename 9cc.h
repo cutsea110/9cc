@@ -27,6 +27,8 @@ enum {
       ND_IF,        // if
       ND_ELSE,      // else
       ND_WHILE,     // while
+      ND_FOR,       // for
+      ND_NOP,       // no operation
 };
 
 typedef struct {
