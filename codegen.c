@@ -146,16 +146,6 @@ void gen(Node* node) {
     printf("  setne al\n");
     printf("  movzb rax, al\n");
     break;
-  case TK_GE:
-    printf("  cmp rdi, rax\n");
-    printf("  setle al\n");
-    printf("  movzb rax, al\n");
-    break;
-  case TK_GT:
-    printf("  cmp rdi, rax\n");
-    printf("  setl al\n");
-    printf("  movzb rax, al\n");
-    break;
   case TK_LE:
     printf("  cmp rax, rdi\n");
     printf("  setle al\n");
@@ -165,6 +155,12 @@ void gen(Node* node) {
     printf("  cmp rax, rdi\n");
     printf("  setl al\n");
     printf("  movzb rax, al\n");
+    break;
+  case TK_GE:
+    error("TK_GE is replaced to TK_LE");
+    break;
+  case TK_GT:
+    error("TK_GT is replaced to TK_LT");
     break;
   }
 

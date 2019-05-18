@@ -330,10 +330,10 @@ Node* relational() {
   Node* node = add();
   if (consume(TK_GE)) {
     DEBUG("\">=\" Found");
-    node = new_node(TK_GE, node, add());
+    node = new_node(TK_LE, add(), node);
   } else if (consume(TK_GT)) {
     DEBUG("\">\" Found");
-    node = new_node(TK_GT, node, add());
+    node = new_node(TK_LT, add(), node);
   } else if (consume(TK_LE)) {
     DEBUG("\"<=\" Found");
     node = new_node(TK_LE, node, add());
