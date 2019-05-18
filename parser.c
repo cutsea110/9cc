@@ -12,6 +12,7 @@ Vector* tokenize(char* p);
 
 void program();
 Node* stmt();
+Node* expr();
 Node* assign();
 Node* equality();
 Node* relational();
@@ -172,9 +173,9 @@ Node* stmt() {
   if (consume(TK_RETURN)) {
     node = malloc(sizeof(Node));
     node->ty = ND_RETURN;
-    node->lhs = assign();
+    node->lhs = expr();
   } else {
-    node = assign();
+    node = expr();
   }
   
   if (!consume(';')) {
@@ -184,6 +185,10 @@ Node* stmt() {
   }
   DEBUG("';' Found");
   return node;
+}
+
+Node* expr() {
+  return assign();
 }
 
 Node* assign() {
