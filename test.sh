@@ -65,7 +65,7 @@ try 3 'a = 1; if (42 == 41) a = a + 1; else a = a + 2; return a;'
 
 try 128 'i = 1; while (i <= 100) i = i * 2; return i;'
 
-try 10 'for (a=0;a<=10;a=a+1)a;return a;'
+try 10 'for (a=0;a<10;a=a+1)a;return a;'
 try 45 'total = 0; for (i = 0; i < 10; i = i+1) total = total + i; return total;'
 try 10 'total = 0; for (; total <= 10;) total = total + 1; return total;'
 try 10 'for (total = 0; total <= 10;) total = total + 1; return total;'
