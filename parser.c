@@ -188,7 +188,17 @@ Node* stmt() {
     if (consume('(')) {
       node->lhs = expr();
       if (consume(')')) {
-	node->rhs = stmt();
+	Node* stt = stmt();
+	if (consume(TK_ELSE)) {
+	  DEBUG("\"else\" found");
+	  Node* ste = malloc(sizeof(Node));
+	  ste->ty = ND_ELSE;
+	  ste->lhs = stt;
+	  ste->rhs = stmt();
+	  node->rhs = ste;
+	} else {
+	  node->rhs = stt;
+	}
 	return node;
       } else {
 	DEBUG("')' NOT Found");

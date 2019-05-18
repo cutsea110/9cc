@@ -25,6 +25,7 @@ enum {
       ND_IDENT,     // 識別子
       ND_RETURN,    // return
       ND_IF,        // if
+      ND_ELSE,      // else
 };
 
 typedef struct {
