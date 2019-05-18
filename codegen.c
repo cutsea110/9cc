@@ -4,6 +4,7 @@
 
 #include "9cc.h"
 
+int label_count = 0;
 
 void gen_lval(Node* node) {
   if (node->ty != ND_IDENT)
@@ -27,6 +28,18 @@ void gen(Node* node) {
     printf("  mov rsp, rbp\n");
     printf("  pop rbp\n");
     printf("  ret\n");
+    return;
+  }
+
+  if (node->ty == ND_IF) {
+    label_count++;
+    int lcnt = label_count;
+    gen(node->lhs);
+    printf("  pop rax\n");
+    printf("  cmp rax, 0\n");
+    printf("  je  .Lend%04d\n", lcnt);
+    gen(node->rhs);
+    printf(".Lend%04d:\n", lcnt);
     return;
   }
   

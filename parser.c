@@ -177,16 +177,19 @@ Node* stmt() {
   Node* node;
   
   if (consume(TK_RETURN)) {
+    DEBUG("\"return\" found");
     node = malloc(sizeof(Node));
     node->ty = ND_RETURN;
     node->lhs = expr();
   } else if (consume(TK_IF)) {
+    DEBUG("\"if\" found");
     node = malloc(sizeof(Node));
     node->ty = ND_IF;
     if (consume('(')) {
       node->lhs = expr();
       if (consume(')')) {
 	node->rhs = stmt();
+	return node;
       } else {
 	DEBUG("')' NOT Found");
 	Token* t = tokens->data[pos];

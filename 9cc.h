@@ -82,3 +82,4 @@ extern Vector* tokens;
 extern int pos;
 extern Node* code[100];
 extern int debug_flg;
+extern int label_count;
