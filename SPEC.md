@@ -8,8 +8,10 @@ SYNTAX
 program: stmt program
 program: e
 
-stmt: "return" assign ";"
-stmt: assign ";"
+stmt: "return" expr ";"
+stmt: expr ";"
+
+expr: assign
 
 assign: equality
 assign: equality "=" assign
