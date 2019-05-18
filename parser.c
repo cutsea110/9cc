@@ -210,6 +210,25 @@ Node* stmt() {
       Token* t = tokens->data[pos];
       error("'('ではないトークンです: %s", t->input);
     }
+  } else if (consume(TK_WHILE)) {
+    DEBUG("\"while\" found");
+    node = malloc(sizeof(Node));
+    node->ty = ND_WHILE;
+    if (consume('(')) {
+      node->lhs = expr();
+      if (consume(')')) {
+	node->rhs = stmt();
+	return node;
+      } else {
+	DEBUG("')' NOT Found");
+	Token* t = tokens->data[pos];
+	error("'('ではないトークンです: %s", t->input);
+      }
+    } else {
+      DEBUG("')' NOT Found");
+      Token* t = tokens->data[pos];
+      error("'('ではないトークンです: %s", t->input);
+    }
   } else {
     node = expr();
   }

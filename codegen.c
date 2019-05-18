@@ -55,6 +55,19 @@ void gen(Node* node) {
       return;
     }
   }
+
+  if (node->ty == ND_WHILE) {
+    int lcnt = ++label_count;
+    printf(".Lbegin%04d:\n", lcnt);
+    gen(node->lhs);
+    printf("  pop rax\n");
+    printf("  cmp rax, 0\n");
+    printf("  je .Lend%04d\n", lcnt);
+    gen(node->rhs);
+    printf("  jmp .Lbegin%04d\n", lcnt);
+    printf(".Lend%04d:\n", lcnt);
+    return;
+  }
   
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);

@@ -12,6 +12,7 @@ stmt: expr ";"
 stmt: "return" expr ";"
 stmt: "if" "(" expr ")" stmt
 stmt: "if" "(" expr ")" stmt "else" stmt
+stmt: "while" "(" expr ")" stmt
 
 expr: assign
 
