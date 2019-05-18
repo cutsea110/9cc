@@ -45,4 +45,6 @@ try 0 'return 4 < 4;'
 try 0 'return 1 + 3 > 2 * 2;'
 try 1 'return 1 + 3 >= 2 * 2;'
 
+try 3 'if (42 == 42) return 3;'
+
 echo OK
