@@ -8,8 +8,10 @@ SYNTAX
 program: stmt program
 program: e
 
-stmt: "return" expr ";"
 stmt: expr ";"
+stmt: "return" expr ";"
+stmt: "if" "(" expr ")" stmt
+stmt: "if" "(" expr ")" stmt "else" stmt
 
 expr: assign
 
