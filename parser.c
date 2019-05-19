@@ -138,7 +138,7 @@ Vector* tokenize(char* p) {
       continue;
     }
     
-    if (strchr("+-*/()=;", *p)) {
+    if (strchr("+-*/(){}=;", *p)) {
       add_token(v, *p, p);
       p++;
       continue;
@@ -282,6 +282,14 @@ Node* stmt() {
       Token* t = tokens->data[pos];
       error("'('ではないトークンです: %s", t->input);
     }
+  } else if (consume('{')) {
+    DEBUG("'{' found, block start");
+    Node* node = malloc(sizeof(Node));
+    node->ty = ND_BLOCK;
+    while (!consume('}')) {
+      
+    }
+    DEBUG("'}' found, block end");
   } else {
     node = expr();
   }
