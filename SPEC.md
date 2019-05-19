@@ -9,6 +9,7 @@ program: stmt program
 program: e
 
 stmt: expr ";"
+stmt: "{" stmt* "}"
 stmt: "return" expr ";"
 stmt: "if" "(" expr ")" stmt
 stmt: "if" "(" expr ")" stmt "else" stmt
