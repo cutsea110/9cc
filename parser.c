@@ -286,8 +286,10 @@ Node* stmt() {
     DEBUG("'{' found, block start");
     Node* node = malloc(sizeof(Node));
     node->ty = ND_BLOCK;
+    node->blk = new_vector();
     while (!consume('}')) {
-      
+      Node* st = stmt();
+      vec_push(node->blk, (void*)st);
     }
     DEBUG("'}' found, block end");
   } else {

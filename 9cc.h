@@ -39,14 +39,6 @@ typedef struct {
   char* input;      // トークン文字列(エラーメッセージ用)
 } Token;
 
-typedef struct Node {
-  int ty;           // 演算子かND_NUM,ND_IDENT
-  struct Node* lhs; // 左辺
-  struct Node* rhs; // 右辺
-  int val;          // tyがND_NUMの場合その数値
-  char* name;       // ND_IDENTの場合のみ使う
-} Node;
-
 typedef struct {
   void** data;      // データ本体
   int capacity;     // バッファの大きさ(data[0]~data[capacity-1]がバッファ領域)
@@ -57,6 +49,15 @@ typedef struct {
   Vector* keys;
   Vector* vals;
 } Map;
+
+typedef struct Node {
+  int ty;           // 演算子かND_NUM,ND_IDENT
+  struct Node* lhs; // 左辺
+  struct Node* rhs; // 右辺
+  int val;          // tyがND_NUMの場合その数値
+  char* name;       // ND_IDENTの場合のみ使う
+  Vector* blk;     // ND_BLOCKの場合のみ使う
+} Node;
 
 extern void error(char* fmt, ...);
 extern void DEBUG(char* fmt, ...);
