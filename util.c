@@ -127,6 +127,36 @@ void dump_code(int i, Node* node, int level) {
       dump_code(i, st, level+1);
     }
     break;
+  case ND_EQ:
+    fprintf(stderr, "ND_EQ:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_NE:
+    fprintf(stderr, "ND_NE:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_LE:
+    fprintf(stderr, "ND_LE:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_LT:
+    fprintf(stderr, "ND_LT:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_GE:
+    fprintf(stderr, "ND_GE:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_GT:
+    fprintf(stderr, "ND_GT:\n");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
   case ND_NOP:
     fprintf(stderr, "ND_NOP\n");
     break;
