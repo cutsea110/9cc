@@ -292,6 +292,7 @@ Node* stmt() {
       vec_push(node->blk, (void*)st);
     }
     DEBUG("'}' found, block end");
+    return node;
   } else {
     node = expr();
   }
@@ -323,10 +324,10 @@ Node* equality() {
   Node* node = relational();
   if (consume(TK_EQ)) {
     DEBUG("\"==\" Found");
-    node = new_node(TK_EQ, node, relational());
+    node = new_node(ND_EQ, node, relational());
   } else if (consume(TK_NE)) {
     DEBUG("\"!=\" Found");
-    node = new_node(TK_NE, node, relational());
+    node = new_node(ND_NE, node, relational());
   } else {
     DEBUG("return equality");
     return node;
@@ -338,16 +339,16 @@ Node* relational() {
   Node* node = add();
   if (consume(TK_GE)) {
     DEBUG("\">=\" Found");
-    node = new_node(TK_LE, add(), node);
+    node = new_node(ND_LE, add(), node);
   } else if (consume(TK_GT)) {
     DEBUG("\">\" Found");
-    node = new_node(TK_LT, add(), node);
+    node = new_node(ND_LT, add(), node);
   } else if (consume(TK_LE)) {
     DEBUG("\"<=\" Found");
-    node = new_node(TK_LE, node, add());
+    node = new_node(ND_LE, node, add());
   } else if (consume(TK_LT)) {
     DEBUG("\"<\" Found");
-    node = new_node(TK_LT, node, add());
+    node = new_node(ND_LT, node, add());
   } else {
     DEBUG("return relational");
     return node;

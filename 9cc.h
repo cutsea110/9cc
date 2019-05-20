@@ -30,6 +30,12 @@ enum {
       ND_FOR,       // for
       ND_BLOCK,     // block
       ND_NOP,       // no operation
+      ND_EQ,        // ==
+      ND_NE,        // !=
+      ND_GE,        // >=
+      ND_GT,        // >
+      ND_LE,        // <=
+      ND_LT,        // <
 };
 
 typedef struct {
@@ -62,6 +68,7 @@ typedef struct Node {
 extern void error(char* fmt, ...);
 extern void DEBUG(char* fmt, ...);
 extern void DUMP_TOKENS();
+extern void DUMP_CODES();
 
 extern Vector* new_vector();
 extern void vec_push(Vector*, void*);

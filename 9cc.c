@@ -36,7 +36,11 @@ int main(int argc, char** argv) {
   tokens = tokenize(prog_code);
   if (debug_flg)
     DUMP_TOKENS();
+
   program();
+
+  if (debug_flg)
+    DUMP_CODES();
 
   // アセンブリの前半部分を出力
   printf(".intel_syntax noprefix\n");

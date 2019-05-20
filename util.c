@@ -77,3 +77,65 @@ void DUMP_TOKENS() {
     }
   }
 }
+
+void dump_code(int i, Node* node, int level) {
+  if (level == 0) {
+    fprintf(stderr, "=======================\n");
+    fprintf(stderr, "  code[%d]\n", i);
+    fprintf(stderr, "=======================\n");
+  }
+  // インデントする
+  for (int n = 0; n < level; n++)
+    fprintf(stderr, " ");
+  
+  switch (node->ty) {
+  case ND_NUM:
+    fprintf(stderr, "ND_NUM: %d\n", node->val);
+    break;
+  case ND_IDENT:
+    fprintf(stderr, "ND_IDENT: \"%s\"\n", node->name);
+    break;
+  case ND_RETURN:
+    fprintf(stderr, "ND_RETURN:\n");
+    dump_code(i, node->lhs, level+1);
+    break;
+  case ND_IF:
+    fprintf(stderr, "ND_IF:", i);
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_ELSE:
+    fprintf(stderr, "ND_ELSE:", i);
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_WHILE:
+    fprintf(stderr, "ND_WHILE:");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_FOR:
+    fprintf(stderr, "ND_FOR:");
+    dump_code(i, node->lhs, level+1);
+    dump_code(i, node->rhs, level+1);
+    break;
+  case ND_BLOCK:
+    fprintf(stderr, "ND_BLOCK:");
+    Vector* blk = node->blk;
+    for (int j = 0; j < blk->len; j++) {
+      Node* st = blk->data[j];
+      dump_code(i, st, level+1);
+    }
+    break;
+  case ND_NOP:
+    fprintf(stderr, "ND_NOP\n");
+    break;
+  }
+}
+
+void DUMP_CODES() {
+  for (int i = 0; code[i]; i++) {
+    Node* node = code[i];
+    dump_code(i, node, 0);
+  }
+}

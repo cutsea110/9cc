@@ -23,6 +23,7 @@ void gen_lval(Node* node) {
 
 void gen(Node* node) {
   if (node->ty == ND_RETURN) {
+    DEBUG("ND_RETURN Found");
     gen(node->lhs);
     printf("  pop rax\n");
     printf("  mov rsp, rbp\n");
@@ -32,7 +33,9 @@ void gen(Node* node) {
   }
 
   if (node->ty == ND_IF) {
+    DEBUG("ND_IF Found");
     if (node->rhs->ty == ND_ELSE) {
+      DEBUG("ND_ELSE Found");
       int lcnt = ++label_count;
       gen(node->lhs);
       printf("  pop rax\n");
@@ -57,6 +60,7 @@ void gen(Node* node) {
   }
 
   if (node->ty == ND_WHILE) {
+    DEBUG("ND_WHILE Found");
     int lcnt = ++label_count;
     printf(".Lbegin%04d:\n", lcnt);
     gen(node->lhs);
@@ -70,6 +74,7 @@ void gen(Node* node) {
   }
 
   if (node->ty == ND_FOR) {
+    DEBUG("ND_FOR Found");
     int lcnt = ++label_count;
     Node* cond = node->lhs;
     if (cond->lhs->ty != ND_NOP) {
@@ -93,7 +98,13 @@ void gen(Node* node) {
     printf(".Lend%04d:\n", lcnt);
     return;
   }
-  
+  /*
+  if (node->ty == ND_BLOCK) {
+    DEBUG("ND_BLOCK Found");
+    Vector* blk = node->blk;
+    return;
+  }
+  */  
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);
     return;
@@ -137,31 +148,31 @@ void gen(Node* node) {
     printf("  mov rdx, 0\n");
     printf("  div rdi\n");
     break;
-  case TK_EQ:
+  case ND_EQ:
     printf("  cmp rdi, rax\n");
     printf("  sete al\n");
     printf("  movzb rax, al\n");
     break;
-  case TK_NE:
+  case ND_NE:
     printf("  cmp rdi, rax\n");
     printf("  setne al\n");
     printf("  movzb rax, al\n");
     break;
-  case TK_LE:
+  case ND_LE:
     printf("  cmp rax, rdi\n");
     printf("  setle al\n");
     printf("  movzb rax, al\n");
     break;
-  case TK_LT:
+  case ND_LT:
     printf("  cmp rax, rdi\n");
     printf("  setl al\n");
     printf("  movzb rax, al\n");
     break;
-  case TK_GE:
-    error("TK_GE is replaced to TK_LE");
+  case ND_GE:
+    error("ND_GE is replaced to ND_LE");
     break;
-  case TK_GT:
-    error("TK_GT is replaced to TK_LT");
+  case ND_GT:
+    error("ND_GT is replaced to ND_LT");
     break;
   }
 
