@@ -76,5 +76,7 @@ try 3 'if (42 == 42) {return 3;} else {return 5;}'
 try 5 'if (42 == 41) {return 3;} else {return 5;}'
 try 5 'a = 2; b = 3; if (42 == 42) {return a + b;} else {return a * b;}'
 try 6 'a = 2; b = 3; if (42 == 41) {return a + b;} else {return a * b;}'
+try 55 'a = 1; b = 1; n = 0 ; while (n < 8) { tmp = a; a = b; b = tmp + a; n = n + 1;} return b;' # fib
+try 55 'total = 0; for (i = 0; i <= 10; i = i+1) { total = total + i;} return total;' # sum
 
 echo OK
