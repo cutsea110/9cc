@@ -98,13 +98,18 @@ void gen(Node* node) {
     printf(".Lend%04d:\n", lcnt);
     return;
   }
-  /*
+
   if (node->ty == ND_BLOCK) {
     DEBUG("ND_BLOCK Found");
     Vector* blk = node->blk;
+    for (int j = 0; j < blk->len; j++) {
+      Node* st = blk->data[j];
+      gen(st);
+      printf("  pop rax\n");
+    }
     return;
   }
-  */  
+
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);
     return;
