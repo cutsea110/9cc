@@ -45,4 +45,5 @@ unary: term
 
 term: num
 term: ident
+term: ident "(" ")"
 term: "(" expr ")"
