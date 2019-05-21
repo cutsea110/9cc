@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int fun1 () {
-  printf("OK\n");
+  printf("Success to call fun1!\n");
   return 7; // lucky seven
 }

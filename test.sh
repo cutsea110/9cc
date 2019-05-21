@@ -4,7 +4,7 @@ try(){
     input="$2"
 
     ./9cc "$input" > tmp.s
-    gcc -o tmp tmp.s
+    gcc -o tmp tmp.s func.o
     ./tmp
     actual="$?"
 
@@ -79,6 +79,7 @@ try 6 'a = 2; b = 3; if (42 == 41) {return a + b;} else {return a * b;}'
 try 55 'a = 1; b = 1; n = 0 ; while (n < 8) { tmp = a; a = b; b = tmp + a; n = n + 1;} return b;' # fib
 try 55 'total = 0; for (i = 0; i <= 10; i = i+1) { total = total + i;} return total;' # sum
 
-try 0 'return fun1();'
+try 7 'return fun1();'
+try 21 'a = fun1() + fun1(); return a + fun1();'
 
 echo OK
