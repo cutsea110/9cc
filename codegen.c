@@ -110,6 +110,14 @@ void gen(Node* node) {
     return;
   }
 
+  if (node->ty == ND_FUNCALL) {
+    DEBUG("ND_FUNCALL Found");
+    Node* fun = node->lhs;
+    printf("  call %s\n", fun->name);
+    printf("  push rax\n");
+    return;
+  }
+
   if (node->ty == ND_NUM) {
     printf("  push %d\n", node->val);
     return;

@@ -127,6 +127,10 @@ void dump_code(int i, Node* node, int level) {
       dump_code(i, st, level+1);
     }
     break;
+  case ND_FUNCALL:
+    fprintf(stderr, "ND_FUNCALL:\n");
+    dump_code(i, node->lhs, level+1);
+    break;
   case ND_EQ:
     fprintf(stderr, "ND_EQ:\n");
     dump_code(i, node->lhs, level+1);

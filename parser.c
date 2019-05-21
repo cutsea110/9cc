@@ -423,7 +423,18 @@ Node* term() {
   if (t->ty == TK_IDENT) {
     DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
     pos++;
-    return new_node_ident(t->name);
+    if (consume('(')) {
+      if (consume(')')) {
+	Node* node = malloc(sizeof(Node));
+	node->ty = ND_FUNCALL;
+	node->lhs = new_node_ident(t->name);
+	return node;
+      } else {
+	error("関数呼び出しにおける引数リストの開きカッコに対応する閉じカッコがありません: %s", t->input);
+      }
+    } else {
+      return new_node_ident(t->name);
+    }
   }
   if (t->ty == TK_NUM) {
     DEBUG("TK_NUM Found at position(%d) = %d", pos, t->val);

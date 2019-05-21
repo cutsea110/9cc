@@ -29,6 +29,7 @@ enum {
       ND_WHILE,     // while
       ND_FOR,       // for
       ND_BLOCK,     // block
+      ND_FUNCALL,   // function call
       ND_NOP,       // no operation
       ND_EQ,        // ==
       ND_NE,        // !=
