@@ -41,14 +41,13 @@ int main(int argc, char** argv) {
 
   if (debug_flg)
     DUMP_CODES();
-
+  
   // アセンブリの前半部分を出力
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
 
   // プロローグ
-  // 変数26個分の領域を確保する
   printf("  push rbp\n");
   printf("  mov rbp, rsp\n");
   printf("  sub rsp, 208\n"); // 26 * 8 = 208

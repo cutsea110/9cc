@@ -131,6 +131,9 @@ Vector* tokenize(char* p) {
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);
+	if (map_get(global_vars, name) == NULL) {
+	  map_put(global_vars, name, (void*)NULL);
+	}
       }
       Token* t = add_token(v, ty, p);
       t->name = name;
