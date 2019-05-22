@@ -10,10 +10,10 @@ void gen_lval(Node* node) {
   if (node->ty != ND_IDENT)
     error("代入の左辺値が変数ではありません");
 
-  int offset = map_exists(variables, node->name);
+  int offset = map_exists(global_vars, node->name);
   if (offset == -1) {
-    map_put(variables, node->name, (void*)NULL);
-    offset = map_exists(variables, node->name);
+    map_put(global_vars, node->name, (void*)NULL);
+    offset = map_exists(global_vars, node->name);
   }
   DEBUG("\"%s\" Found with offset(%d)", node->name, offset);
   printf("  mov rax, rbp\n");

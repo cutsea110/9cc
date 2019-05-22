@@ -127,7 +127,7 @@ Vector* tokenize(char* p) {
       while (is_alnum(p[len]))
 	len++;
       char* name = strndup(p, len);
-      int ty = (intptr_t)map_get(variables, name);
+      int ty = (intptr_t)map_get(global_vars, name);
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);

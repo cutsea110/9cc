@@ -7,7 +7,7 @@
 
 #include "9cc.h"
 
-Map* variables;
+Map* global_vars;
 Vector* tokens;
 int pos = 0;
 Node* code[100];
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  variables = new_map();
+  global_vars = new_map();
 
   // トークナイズしてパースする
   // 結果はcodeに保存される
