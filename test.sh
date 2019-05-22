@@ -84,5 +84,8 @@ try 21 'a = fun0() + fun0(); return a + fun0();'
 try 8 'return fun1(2);'
 try 5 'return fun2(2, 3);'
 try 25 'return fun3(7, 3, 4);'
+try 23 'return fun4(3, 7, 5, 2);'
+try 39 'return fun5(11, 3, 7, 5, 2);'
+try 27 'return fun6(11, 3, 7, 5, 2, 13);'
 
 echo OK
