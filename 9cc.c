@@ -47,10 +47,11 @@ int main(int argc, char** argv) {
   printf(".global main\n");
   printf("main:\n");
 
+  int offset = roundup((global_vars->keys->len + 1) * 8 ,16);
   // プロローグ
   printf("  push rbp\n");
   printf("  mov rbp, rsp\n");
-  printf("  sub rsp, 208\n"); // 26 * 8 = 208
+  printf("  sub rsp, %d\n", offset);
 
   // 先頭の式から順にコード生成
   for (int i = 0; code[i]; i++) {
