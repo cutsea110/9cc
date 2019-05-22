@@ -5,8 +5,10 @@ SPECIFICATION
 SYNTAX
 ----------
 
-program: stmt program
+program: decl program
 program: e
+
+decl: ident "(" expr? ("," expr)* ")" "{" stmt* "}"
 
 stmt: expr ";"
 stmt: "{" stmt* "}"
