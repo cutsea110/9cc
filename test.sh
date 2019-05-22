@@ -90,5 +90,6 @@ try 27 'return fun6(11, 3, 7, 5, 2, 13);'
 try 4 'return twice(2);'
 try 16 'return twice(twice(2));'
 try 255 'return twice(twice(twice(2))) - 1;'
+try 12 'x=0;for(i=0; i<3; i=i+1){ x = x + twice(2); } return x;'
 
 echo OK
