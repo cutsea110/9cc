@@ -34,3 +34,8 @@ int fun6 (int x, int y, int z, int u, int v, int w) {
   printf("%d * %d + %d - %d mod %d * %d = %d\n", x, y, z, u, v, w, x * y + z - (u % v) * w);
   return  x * y + z - (u % v) * w;
 }
+
+int twice(int n) {
+  return n * n;
+}
+

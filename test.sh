@@ -87,5 +87,8 @@ try 25 'return fun3(7, 3, 4);'
 try 23 'return fun4(3, 7, 5, 2);'
 try 39 'return fun5(11, 3, 7, 5, 2);'
 try 27 'return fun6(11, 3, 7, 5, 2, 13);'
+try 4 'return twice(2);'
+try 16 'return twice(twice(2));'
+try 255 'return twice(twice(twice(2))) - 1;'
 
 echo OK
