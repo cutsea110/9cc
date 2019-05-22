@@ -141,7 +141,7 @@ Vector* tokenize(char* p) {
       continue;
     }
     
-    if (strchr("+-*/(){}=;", *p)) {
+    if (strchr("+-*/(){}=,;", *p)) {
       add_token(v, *p, p);
       p++;
       continue;
@@ -427,14 +427,25 @@ Node* term() {
     DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
     pos++;
     if (consume('(')) {
-      if (consume(')')) {
-	Node* node = malloc(sizeof(Node));
-	node->ty = ND_FUNCALL;
-	node->lhs = new_node_ident(t->name);
-	return node;
-      } else {
-	error("関数呼び出しにおける引数リストの開きカッコに対応する閉じカッコがありません: %s", t->input);
+      int arg_count = 0;
+      Node* arg = malloc(sizeof(Node));
+      arg->ty = ND_ARGS;
+      arg->blk = new_vector();
+      while (!consume(')')) {
+	vec_push(arg->blk, expr());
+	if (consume(',')) {
+	  continue;
+	} else if (consume(')')) {
+	  break;
+	} else {
+	  error("関数呼び出しにおける引数リストの与え方が正しくありません: %s", t->input);
+	}
       }
+      Node* node = malloc(sizeof(Node));
+      node->ty = ND_FUNCALL;
+      node->lhs = new_node_ident(t->name);
+      node->rhs = arg;
+      return node;
     } else {
       return new_node_ident(t->name);
     }

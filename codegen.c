@@ -112,6 +112,13 @@ void gen(Node* node) {
 
   if (node->ty == ND_FUNCALL) {
     DEBUG("ND_FUNCALL Found");
+    char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
+    Vector* args = node->rhs->blk;
+    for (int j = 0; j < args->len; j++) {
+      Node* exp = args->data[j];
+      gen(exp);
+      printf("  pop %s\n", regs[j]);
+    }
     Node* fun = node->lhs;
     printf("  call %s\n", fun->name);
     printf("  push rax\n");
