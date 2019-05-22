@@ -66,6 +66,7 @@ typedef struct Node {
   Vector* blk;     // ND_BLOCKの場合のみ使う
 } Node;
 
+extern int roundup(int x, int align);
 extern void error(char* fmt, ...);
 extern void DEBUG(char* fmt, ...);
 extern void DUMP_TOKENS();

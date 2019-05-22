@@ -4,6 +4,10 @@
 
 #include "9cc.h"
 
+int roundup(int x, int align) {
+  return (x + align - 1) & ~(align - 1);
+}
+
 // エラーを報告するための関数
 // printfと同じ引数を取る
 void error(char* fmt, ...) {
