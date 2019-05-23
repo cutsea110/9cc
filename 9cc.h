@@ -29,6 +29,9 @@ enum {
       ND_WHILE,     // while
       ND_FOR,       // for
       ND_BLOCK,     // block
+      ND_FUNDECL,   // function declare
+      ND_FUNARGS,   // argument list of function declare
+      ND_FUNBODY,   // body statement list of function declare
       ND_FUNCALL,   // function call
       ND_ARGS,      // argument expr list
       ND_NOP,       // no operation
@@ -63,8 +66,9 @@ typedef struct Node {
   struct Node* lhs; // 左辺
   struct Node* rhs; // 右辺
   int val;          // tyがND_NUMの場合その数値
-  char* name;       // ND_IDENTの場合のみ使う
-  Vector* blk;     // ND_BLOCKの場合のみ使う
+  char* name;       // ND_IDENT, ND_FUNDECLの場合のみ使う
+  Vector* blk;      // ND_BLOCKの場合のみ使う
+  Map* local_vars;  // ND_FUNARGSの場合のみ使う
 } Node;
 
 extern int roundup(int x, int align);
