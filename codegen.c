@@ -110,6 +110,25 @@ void gen(Node* node) {
     return;
   }
 
+  if (node->ty == ND_FUNDECL) {
+    DEBUG("ND_FUNDECL Found");
+    printf(".global %s\n", node->name);
+    printf("%s:\n", node->name);
+    int offset = roundup((node->arg_vars->keys->len + 1) * 8 ,16);
+    // プロローグ
+    printf("  push rbp\n");
+    printf("  mov rbp, rsp\n");
+    printf("  sub rsp, %d\n", offset);
+    // 引数の値は各レジスタに入っているので
+    // それぞれをスタックへコピーする
+    
+    // エピローグ
+    printf("  mov rsp, rbp\n");
+    printf("  pop rbp\n");
+    printf("  ret\n");
+    return;
+  }
+
   if (node->ty == ND_FUNCALL) {
     DEBUG("ND_FUNCALL Found");
     char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
