@@ -30,7 +30,7 @@ enum {
       ND_FOR,       // for
       ND_BLOCK,     // block
       ND_FUNDECL,   // function declare
-      ND_FUNVARS,   // argument list of function declare
+      ND_FUNARGS,   // argument list of function declare
       ND_FUNCALL,   // function call
       ND_ARGS,      // argument expr list
       ND_NOP,       // no operation
@@ -66,9 +66,8 @@ typedef struct Node {
   struct Node* rhs; // 右辺
   int val;          // tyがND_NUMの場合その数値
   char* name;       // ND_IDENT, ND_FUNDECLの場合のみ使う
-  Map* args;        // ND_FUNDECLの場合のみ使う
-  Map* local_vars;  // ND_FUNDECLの場合のみ使う
   Vector* blk;      // ND_BLOCK, ND_FUNDECLの場合のみ使う
+  Map* arg_vars;  // ND_FUNARGSの場合のみ使う
 } Node;
 
 extern int roundup(int x, int align);
@@ -98,7 +97,6 @@ extern void gen_lval(Node* node);
 extern void gen(Node* node);
 
 extern Map* global_vars;
-extern Map* current_idents;
 extern Vector* tokens;
 extern int pos;
 extern Node* code[100];

@@ -5,8 +5,6 @@
 
 #include "9cc.h"
 
-Map* current_idents;
-
 int is_alnum(char c);
 int consume(int ty);
 
@@ -130,12 +128,12 @@ Vector* tokenize(char* p) {
       while (is_alnum(p[len]))
 	len++;
       char* name = strndup(p, len);
-      int ty = (intptr_t)map_get(current_idents, name);
+      int ty = (intptr_t)map_get(global_vars, name);
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);
-	if (map_get(current_idents, name) == NULL) {
-	  map_put(current_idents, name, (void*)NULL);
+	if (map_get(global_vars, name) == NULL) {
+	  map_put(global_vars, name, (void*)NULL);
 	}
       }
       Token* t = add_token(v, ty, p);
@@ -187,16 +185,11 @@ Node* decl() {
     node->name = t->name;
     pos++;
     if (consume('(')) {
-      node->args = new_map();
-      node->local_vars = new_map();
-      // パーサの他の部分からローカルな識別子を登録してもらえるようにする
-      current_idents = node->local_vars;
-      
+      node->arg_vars = new_map();
       while (!consume(')')) {
 	Token* t = tokens->data[pos];
 	if (t->ty == TK_IDENT) {
-	  map_put(node->args, t->name, (void*)NULL);
-	  map_put(node->local_vars, t->name, (void*)NULL);
+	  map_put(node->arg_vars, t->name, (void*)NULL);
 	  pos++;
 	} else {
 	  error("引数は識別子で与える必要があります: %s", t->input);
