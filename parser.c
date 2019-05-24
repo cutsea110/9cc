@@ -212,8 +212,7 @@ Node* decl() {
 	body->ty = ND_BLOCK;
 	body->blk = new_vector();
 	while (!consume('}')) {
-	  Node* st = stmt();
-	  vec_push(body->blk, (void*)st);
+	  vec_push(body->blk, stmt());
 	}
 	node->rhs = body;
 	return node;
