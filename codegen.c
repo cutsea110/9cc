@@ -114,7 +114,7 @@ void gen(Node* node) {
     DEBUG("ND_FUNDECL Found");
     printf(".global %s\n", node->name);
     printf("%s:\n", node->name);
-    int offset = roundup((node->arg_vars->keys->len + 1) * 8 ,16);
+    int offset = roundup((node->local_vars->keys->len + 1) * 8 ,16);
     // プロローグ
     printf("  push rbp\n");
     printf("  mov rbp, rsp\n");
