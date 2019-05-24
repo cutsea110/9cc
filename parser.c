@@ -183,7 +183,6 @@ Node* decl() {
     Node* node = malloc(sizeof(Node));
     node->ty = ND_FUNDECL;
     node->name = t->name;
-    pos++;
     if (consume('(')) {
       int arg_count = 0;
       Node* arg = malloc(sizeof(Node));
@@ -193,7 +192,6 @@ Node* decl() {
 	Token* t = tokens->data[pos];
 	if (t->ty == TK_IDENT) {
 	  map_put(arg->local_vars, t->name, (void*)NULL);
-	  pos++;
 	} else {
 	  error("引数は識別子で与える必要があります: %s", t->input);
 	}
@@ -209,13 +207,12 @@ Node* decl() {
       node->lhs = arg;
       if (consume('{')) {
 	Node* body = malloc(sizeof(Node));
-	body->ty = ND_BLOCK;
+	body->ty = ND_FUNBODY;
 	body->blk = new_vector();
 	while (!consume('}')) {
 	  vec_push(body->blk, stmt());
 	}
 	node->rhs = body;
-	return node;
       } else {
 	Token* t = tokens->data[pos];
 	error("関数定義の本体がありません: %s", t->input);

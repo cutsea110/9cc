@@ -131,19 +131,6 @@ void dump_code(int i, Node* node, int level) {
       dump_code(i, st, level+1);
     }
     break;
-  case ND_FUNDECL:
-    fprintf(stderr, "ND_FUNDECL: %s\n", node->name);
-    dump_code(i, node->lhs, level+1);
-    dump_code(i, node->rhs, level+1);
-    break;
-  case ND_FUNARGS:
-    fprintf(stderr, "ND_FUNARGS: ");
-    Vector* var_names = node->local_vars->keys;
-    for (int k = 0; k < var_names->len; k++) {
-      fprintf(stderr, "%s ", (char*)var_names->data[k]);
-    }
-    fprintf(stderr, "\n");
-    break;
   case ND_FUNCALL:
     fprintf(stderr, "ND_FUNCALL:\n");
     dump_code(i, node->lhs, level+1);

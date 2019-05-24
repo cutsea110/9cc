@@ -31,6 +31,7 @@ enum {
       ND_BLOCK,     // block
       ND_FUNDECL,   // function declare
       ND_FUNARGS,   // argument list of function declare
+      ND_FUNBODY,   // body statement list of function declare
       ND_FUNCALL,   // function call
       ND_ARGS,      // argument expr list
       ND_NOP,       // no operation
