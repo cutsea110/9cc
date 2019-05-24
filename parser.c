@@ -185,11 +185,14 @@ Node* decl() {
     node->name = t->name;
     pos++;
     if (consume('(')) {
-      node->arg_vars = new_map();
+      int arg_count = 0;
+      Node* arg = malloc(sizeof(Node));
+      arg->ty = ND_FUNARGS;
+      arg->local_vars = new_map();
       while (!consume(')')) {
 	Token* t = tokens->data[pos];
 	if (t->ty == TK_IDENT) {
-	  map_put(node->arg_vars, t->name, (void*)NULL);
+	  map_put(arg->local_vars, t->name, (void*)NULL);
 	  pos++;
 	} else {
 	  error("引数は識別子で与える必要があります: %s", t->input);
@@ -203,6 +206,7 @@ Node* decl() {
 	  error("関数呼び出しにおける引数リストの与え方が正しくありません: %s", t->input);
 	}
       }
+      node->lhs = arg;
       if (consume('{')) {
 	Node* body = malloc(sizeof(Node));
 	body->ty = ND_BLOCK;
@@ -479,6 +483,7 @@ Node* term() {
     DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
     pos++;
     if (consume('(')) {
+      int arg_count = 0;
       Node* arg = malloc(sizeof(Node));
       arg->ty = ND_ARGS;
       arg->blk = new_vector();

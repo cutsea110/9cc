@@ -138,7 +138,7 @@ void dump_code(int i, Node* node, int level) {
     break;
   case ND_FUNARGS:
     fprintf(stderr, "ND_FUNARGS: ");
-    Vector* var_names = node->arg_vars->keys;
+    Vector* var_names = node->local_vars->keys;
     for (int k = 0; k < var_names->len; k++) {
       fprintf(stderr, "%s ", (char*)var_names->data[k]);
     }

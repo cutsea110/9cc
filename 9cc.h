@@ -66,8 +66,8 @@ typedef struct Node {
   struct Node* rhs; // 右辺
   int val;          // tyがND_NUMの場合その数値
   char* name;       // ND_IDENT, ND_FUNDECLの場合のみ使う
-  Vector* blk;      // ND_BLOCK, ND_FUNDECLの場合のみ使う
-  Map* arg_vars;  // ND_FUNARGSの場合のみ使う
+  Vector* blk;      // ND_BLOCKの場合のみ使う
+  Map* local_vars;  // ND_FUNARGSの場合のみ使う
 } Node;
 
 extern int roundup(int x, int align);
