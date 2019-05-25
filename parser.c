@@ -26,16 +26,24 @@ Node* new_node(int ty, Node* lhs, Node* rhs);
 Node* new_node_num(int val);
 Node* new_node_ident(char* name);
 
+Map* current_vars;
+
 int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
 
 int consume(int ty) {
   Token* t = tokens->data[pos];
-  if (t->ty != ty)
+  if (t->ty != ty) {
     return 0;
-  pos++;
-  return 1;
+  } else if (t->ty == TK_IDENT) {
+    map_put(current_vars != NULL ? current_vars : global_vars, t->name, (void*)NULL);
+    pos++;
+    return 1;
+  } else {
+    pos++;
+    return 1;
+  }
 }
 
 Token* add_token(Vector* v, int ty, char* p) {
