@@ -28,6 +28,10 @@ Node* new_node_ident(char* name);
 
 Map* current_vars;
 
+Map* vars_map() {
+  return current_vars != NULL ? current_vars : global_vars;
+}
+
 int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
@@ -37,7 +41,7 @@ int consume(int ty) {
   if (t->ty != ty) {
     return 0;
   } else if (t->ty == TK_IDENT) {
-    map_put(current_vars != NULL ? current_vars : global_vars, t->name, (void*)NULL);
+    map_put(vars_map(), t->name, (void*)NULL);
     pos++;
     return 1;
   } else {
@@ -136,12 +140,12 @@ Vector* tokenize(char* p) {
       while (is_alnum(p[len]))
 	len++;
       char* name = strndup(p, len);
-      int ty = (intptr_t)map_get(global_vars, name);
+      int ty = (intptr_t)map_get(vars_map(), name);
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);
-	if (map_get(global_vars, name) == NULL) {
-	  map_put(global_vars, name, (void*)NULL);
+	if (map_get(vars_map(), name) == NULL) {
+	  map_put(vars_map(), name, (void*)NULL);
 	}
       }
       Token* t = add_token(v, ty, p);
@@ -436,9 +440,7 @@ Node* term() {
   }
 
   Token* t = tokens->data[pos];
-  if (t->ty == TK_IDENT) {
-    DEBUG("TK_IDENT Found at position(%d) = %s", pos, t->input);
-    pos++;
+  if (consume(TK_IDENT)) {
     if (consume('(')) {
       int arg_count = 0;
       Node* arg = malloc(sizeof(Node));
