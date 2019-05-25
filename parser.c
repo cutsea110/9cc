@@ -11,6 +11,7 @@ int consume(int ty);
 Vector* tokenize(char* p);
 
 void program();
+Node* decl();
 Node* stmt();
 Node* expr();
 Node* assign();
@@ -170,9 +171,13 @@ void program() {
   int i = 0;
   while (((Token*)tokens->data[pos])->ty != TK_EOF) {
     DEBUG("add stmt at code[%d]", i);
-    code[i++] = stmt();
+    code[i++] = decl();
   }
   code[i] = NULL;
+}
+
+Node* decl() {
+  return stmt();
 }
 
 Node* stmt() {
