@@ -189,7 +189,39 @@ void program() {
 }
 
 Node* decl() {
-  return stmt();
+  Token* t = tokens->data[pos];
+  if (!consume(TK_IDENT))
+    error("関数名でないトークンです: %s", t->input);
+
+  if (!consume('('))
+    error("'('でないトークンです: %s", t->input);
+
+  current_vars = new_map();
+  
+  int arg_count = 0;
+  while (!consume(TK_IDENT)) {
+    arg_count++;
+    if (consume(',')) {
+      continue;
+    } else {
+      break;
+    }
+  }
+  if (!consume(')'))
+    error("')'でないトークンです: %s", t->input);
+  if (!consume('{'))
+    error("'{'でないトークンです: %s", t->input);
+
+  Vector* vec = new_vector();
+  while (!consume('}')) {
+    vec_push(vec, stmt());
+  }
+  Node* node = malloc(sizeof(Node));
+  node->ty = ND_FUNDEF;
+  node->args = current_vars;
+  node->blk = vec;
+  current_vars = NULL;
+  return node;
 }
 
 Node* stmt() {
