@@ -42,7 +42,7 @@ int consume(int ty) {
   } else if (t->ty == TK_IDENT) {
     Map* m = vars_map();
     if (map_get(m, t->name) == NULL) {
-      map_put(m, t->name, (void*)NULL);
+      map_put(m, t->name, t->name);
     }
     pos++;
     return 1;
