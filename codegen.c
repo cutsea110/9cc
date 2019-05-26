@@ -120,11 +120,13 @@ void gen(Node* node) {
     // プロローグ
     printf("  push rbp\n");
     printf("  mov rbp, rsp\n");
-    printf("  sub rsp, %d\n", offset);
-
     for (int j = 0; j < node->arg_num; j++) {
-      
+      printf("  push %s\n", regs[j]);
+      offset -= 8;
     }
+    if (offset > 0)
+      printf("  sub rsp, %d\n", offset);
+    
     for (int j = 0; node->blk->data[j]; j++) {
       gen((Node*)node->blk->data[j]);
     }
