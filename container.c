@@ -39,7 +39,7 @@ void* map_get(Map* map, char* key) {
   for (int i = map->keys->len - 1; i >= 0; i--)
     if (strcmp(map->keys->data[i], key) == 0) {
       DEBUG("\"%s\" Found at %d", key, i);
-      return map->vals->data[i];
+      return map->keys->data[i];
     }
   DEBUG("\"%s\" NOT Found", key);
   return NULL;

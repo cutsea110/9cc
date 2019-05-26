@@ -5,6 +5,7 @@
 #include "9cc.h"
 
 int label_count = 0;
+char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 
 void gen_lval(Node* node) {
   if (node->ty != ND_IDENT)
@@ -112,12 +113,27 @@ void gen(Node* node) {
 
   if (node->ty == ND_FUNDEF) {
     current_vars = node->local_vars;
+    printf(".global %s\n", node->name);
+    printf("%s:\n", node->name);
+
+    int offset = roundup((node->local_vars->keys->len + 1) * 8 ,16);
+    // プロローグ
+    printf("  push rbp\n");
+    printf("  mov rbp, rsp\n");
+    printf("  sub rsp, %d\n", offset);
+
+    for (int j = 0; j < node->arg_num; j++) {
+      
+    }
+    for (int j = 0; node->blk->data[j]; j++) {
+      gen((Node*)node->blk->data[j]);
+    }
+    
     return;
   }
 
   if (node->ty == ND_FUNCALL) {
     DEBUG("ND_FUNCALL Found");
-    char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
     Vector* args = node->rhs->blk;
     for (int j = 0; j < args->len; j++) {
       Node* exp = args->data[j];

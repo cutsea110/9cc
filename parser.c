@@ -203,11 +203,14 @@ Node* decl() {
     if (consume(',')) {
       continue;
     } else if (consume(')')) {
+      pos--;
       break;
     } else {
       error("','でも')'でもないトークンです: %s", t->input);
     }
   }
+  if (!consume(')'))
+    error("')'でないトークンです: %s", t->input);
 
   node->arg_num = c;
   
