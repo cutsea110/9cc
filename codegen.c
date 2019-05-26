@@ -10,10 +10,10 @@ void gen_lval(Node* node) {
   if (node->ty != ND_IDENT)
     error("代入の左辺値が変数ではありません");
 
-  int offset = map_exists(global_vars, node->name);
+  Map* m = vars_map();
+  int offset = map_exists(m, node->name);
   if (offset == -1) {
-    map_put(global_vars, node->name, (void*)NULL);
-    offset = map_exists(global_vars, node->name);
+    error("\"%s\" NOT Found in symbol table", node->name);
   }
   DEBUG("\"%s\" Found with offset(%d)", node->name, offset);
   printf("  mov rax, rbp\n");
@@ -107,6 +107,11 @@ void gen(Node* node) {
       gen(st);
       printf("  pop rax\n");
     }
+    return;
+  }
+
+  if (node->ty == ND_FUNDEF) {
+    current_vars = node->local_vars;
     return;
   }
 
