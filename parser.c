@@ -41,7 +41,11 @@ int consume(int ty) {
   if (t->ty != ty) {
     return 0;
   } else if (t->ty == TK_IDENT) {
-    map_put(vars_map(), t->name, (void*)NULL);
+    Map* m = vars_map();
+    if (map_get(m, t->name) == NULL) {
+      DEBUG("XXXXXXXXX: %d", ty);
+      map_put(m, t->name, (void*)NULL);
+    }
     pos++;
     return 1;
   } else {
@@ -144,8 +148,9 @@ Vector* tokenize(char* p) {
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);
-	if (map_get(vars_map(), name) == NULL) {
-	  map_put(vars_map(), name, (void*)NULL);
+	Map* m = vars_map();
+	if (map_get(m, name) == NULL) {
+	  map_put(m, name, (void*)NULL);
 	}
       }
       Token* t = add_token(v, ty, p);
@@ -189,26 +194,35 @@ void program() {
 }
 
 Node* decl() {
+  Node* node = malloc(sizeof(Node));
+  node->ty = ND_FUNDEF;
+  
   Token* t = tokens->data[pos];
   if (!consume(TK_IDENT))
     error("関数名でないトークンです: %s", t->input);
+
+  node->name = t->name;
 
   if (!consume('('))
     error("'('でないトークンです: %s", t->input);
 
   current_vars = new_map();
-  
-  int arg_count = 0;
-  while (!consume(TK_IDENT)) {
-    arg_count++;
+
+  int c = 0;
+  while (consume(TK_IDENT)) {
+    c++;
     if (consume(',')) {
       continue;
-    } else {
+    } else if (consume(')')) {
       break;
+    } else {
+      error("','でも')'でもないトークンです: %s", t->input);
     }
   }
-  if (!consume(')'))
-    error("')'でないトークンです: %s", t->input);
+
+  node->arg_num = c;
+  
+  t = tokens->data[pos];
   if (!consume('{'))
     error("'{'でないトークンです: %s", t->input);
 
@@ -216,11 +230,10 @@ Node* decl() {
   while (!consume('}')) {
     vec_push(vec, stmt());
   }
-  Node* node = malloc(sizeof(Node));
-  node->ty = ND_FUNDEF;
-  node->args = current_vars;
-  node->blk = vec;
+  node->local_vars = current_vars;
   current_vars = NULL;
+  
+  node->blk = vec;
   return node;
 }
 

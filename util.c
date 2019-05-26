@@ -131,6 +131,20 @@ void dump_code(int i, Node* node, int level) {
       dump_code(i, st, level+1);
     }
     break;
+  case ND_FUNDEF:
+    fprintf(stderr, "ND_FUNDEF: %s\n", node->name);
+    fprintf(stderr, "  argc: %d\n", node->arg_num);
+    fprintf(stderr, "  argv: ");
+    for (int j = 0; j < node->arg_num; j++) {
+      fprintf(stderr, "%s ", node->local_vars->keys->data[j]);
+    }
+    fprintf(stderr, "\n");
+    fprintf(stderr, "  local variables: ");
+    for (int j = node->arg_num; j < node->local_vars->keys->len; j++) {
+      fprintf(stderr, "%s ", node->local_vars->keys->data[j]);
+    }
+    fprintf(stderr, "\n");
+    break;
   case ND_FUNCALL:
     fprintf(stderr, "ND_FUNCALL:\n");
     dump_code(i, node->lhs, level+1);

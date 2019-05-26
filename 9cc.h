@@ -65,7 +65,7 @@ typedef struct Node {
   struct Node* rhs; // 右辺
   int val;          // tyがND_NUMの場合その数値
   char* name;       // ND_IDENT, ND_FUNDEFの場合のみ使う
-  Map* args;        // ND_FUNDEFの場合のみ使う
+  int arg_num;      // ND_FUNDEFの場合のみ使う
   Map* local_vars;  // ND_FUNDEFの場合のみ使う
   Vector* blk;      // ND_BLOCK, ND_FUNDEFの場合のみ使う
 } Node;
