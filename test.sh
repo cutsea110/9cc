@@ -92,4 +92,17 @@ try 16 'main () { return twice(twice(2)); }'
 try 255 'main () { return twice(twice(twice(2))) - 1; }'
 try 12 'main () { x=0;for(i=0; i<3; i=i+1){ x = x + twice(2); } return x; }'
 
+try 5 'main () { return plus(2,3); } plus(x,y) { return x+y; }'
+try 1 'main () { return fib(1); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 2 'main () { return fib(2); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 3 'main () { return fib(3); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 5 'main () { return fib(4); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 8 'main () { return fib(5); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 13 'main () { return fib(6); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 21 'main () { return fib(7); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 34 'main () { return fib(8); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 55 'main () { return fib(9); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 89 'main () { return fib(10); } fib (n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
+try 120 'main () {return fact(5);} fact(n) { if (n <= 1) { return 1; } else { return n * fact (n-1); }}'
+
 echo OK
