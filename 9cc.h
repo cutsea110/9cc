@@ -97,6 +97,9 @@ extern void gen_lval(Node* node);
 extern void gen(Node* node);
 
 extern Map* global_vars;
+extern Map* current_vars;
+extern Map* vars_map();
+
 extern Vector* tokens;
 extern int pos;
 extern Node* code[100];

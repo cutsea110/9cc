@@ -8,6 +8,12 @@
 #include "9cc.h"
 
 Map* global_vars;
+Map* current_vars;
+
+Map* vars_map() {
+  return current_vars != NULL ? current_vars : global_vars;
+}
+
 Vector* tokens;
 int pos = 0;
 Node* code[100];

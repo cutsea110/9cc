@@ -26,12 +26,6 @@ Node* new_node(int ty, Node* lhs, Node* rhs);
 Node* new_node_num(int val);
 Node* new_node_ident(char* name);
 
-Map* current_vars;
-
-Map* vars_map() {
-  return current_vars != NULL ? current_vars : global_vars;
-}
-
 int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
@@ -43,7 +37,6 @@ int consume(int ty) {
   } else if (t->ty == TK_IDENT) {
     Map* m = vars_map();
     if (map_get(m, t->name) == NULL) {
-      DEBUG("XXXXXXXXX: %d", ty);
       map_put(m, t->name, (void*)NULL);
     }
     pos++;
@@ -148,10 +141,6 @@ Vector* tokenize(char* p) {
       if (!ty) {
 	ty = TK_IDENT;
 	DEBUG("\"%s\" Found", name);
-	Map* m = vars_map();
-	if (map_get(m, name) == NULL) {
-	  map_put(m, name, (void*)NULL);
-	}
       }
       Token* t = add_token(v, ty, p);
       t->name = name;
