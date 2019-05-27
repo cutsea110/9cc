@@ -229,8 +229,10 @@ Node* decl() {
       continue;
     else if (consume(')'))
       break;
-    else
+    else {
+      t = tokens->data[pos];
       error("','でも')'でもないトークンです: %s", t->input);
+    }
   }
 
   node->arg_num = c;
