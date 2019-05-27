@@ -30,11 +30,6 @@ int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
 
-int peek(int ty) {
-  Token* t = tokens->data[pos];
-  return t->ty == ty ? 1 : 0;
-}
-
 int consume(int ty) {
   Token* t = tokens->data[pos];
   if (t->ty != ty) {
@@ -203,19 +198,17 @@ Node* decl() {
   current_vars = new_map();
 
   int c = 0;
-  while (consume(TK_IDENT)) {
+  while (!consume(')')) {
+    consume(TK_IDENT);
     c++;
     if (consume(',')) {
       continue;
-    } else if (peek(')')) {
+    } else if (consume(')')) {
       break;
     } else {
       error("','でも')'でもないトークンです: %s", t->input);
     }
   }
-  
-  if (!consume(')'))
-    error("')'でないトークンです: %s", t->input);
 
   node->arg_num = c;
   
