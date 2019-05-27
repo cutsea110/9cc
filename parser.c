@@ -30,6 +30,18 @@ int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
 
+void entry_ident() {
+  Token* t = tokens->data[pos];
+  if (t->ty != TK_IDENT)
+    error("識別子ではないトークンです: %s", t->input);
+  Map* m = vars_map();
+  if (map_exists(m, t->name))
+    error("宣言済みの変数です: \"%s\"", t->name);
+  map_put(m, t->name, t->name);
+  pos++;
+  return;
+}
+
 int consume(int ty) {
   Token* t = tokens->data[pos];
   if (t->ty != ty) {
