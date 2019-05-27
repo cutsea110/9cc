@@ -203,13 +203,13 @@ Node* decl() {
       c++;
     else
       error("引数でないトークンです: %s", t->input);
-    if (consume(',')) {
+    
+    if (consume(','))
       continue;
-    } else if (consume(')')) {
+    else if (consume(')'))
       break;
-    } else {
+    else
       error("','でも')'でもないトークンです: %s", t->input);
-    }
   }
 
   node->arg_num = c;
