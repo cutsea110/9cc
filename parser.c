@@ -96,6 +96,12 @@ Vector* tokenize(char* p) {
       continue;
     }
 
+    if (strncmp(p, "int", 3) == 0 && !is_alnum(p[3])) {
+      add_token(v, TK_INT, p);
+      p += 3;
+      continue;
+    }
+
     if (strncmp(p, "==", 2) == 0) {
       add_token(v, TK_EQ, p);
       p += 2;
@@ -184,17 +190,27 @@ void program() {
 
 Node* decl() {
   Node* node = malloc(sizeof(Node));
-  node->ty = ND_FUNDEF;
-  
+
   Token* t = tokens->data[pos];
+  if (!consume(TK_INT))
+    error("型でないトークンです: %s", t->input);
+
+  t = tokens->data[pos];
   if (!consume(TK_IDENT))
     error("関数名でないトークンです: %s", t->input);
 
+  // まだ変数か関数かは不明だが識別子だけは決定
   node->name = t->name;
 
-  if (!consume('('))
-    error("'('でないトークンです: %s", t->input);
+  // 変数宣言でした
+  if (consume(';')) {
+    node->ty = ND_VARDEF;
+    return node;
+  } else if (!consume('('))
+    error("';'でも'('でもないトークンです: %s", t->input);
 
+  // 関数定義でした
+  node->ty = ND_FUNDEF;
   current_vars = new_map();
 
   int c = 0;
@@ -224,7 +240,7 @@ Node* decl() {
   }
   node->local_vars = current_vars;
   current_vars = NULL;
-  
+
   node->blk = vec;
   return node;
 }

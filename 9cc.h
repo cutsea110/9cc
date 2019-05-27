@@ -11,6 +11,7 @@ enum {
       TK_ELSE,      // else
       TK_WHILE,     // while
       TK_FOR,       // if
+      TK_INT,       // int
       TK_EQ,        // ==
       TK_NE,        // !=
       TK_GE,        // >=
@@ -29,6 +30,7 @@ enum {
       ND_WHILE,     // while
       ND_FOR,       // for
       ND_BLOCK,     // block
+      ND_VARDEF,    // variable definition
       ND_FUNDEF,    // function definition
       ND_FUNCALL,   // function call
       ND_ARGS,      // argument expr list
