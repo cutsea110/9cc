@@ -215,6 +215,11 @@ Node* decl() {
 
   int c = 0;
   while (!consume(')')) {
+    if (!consume(TK_INT)) {
+      t = tokens->data[pos];
+      error("型でないトークンです: %s", t->input);
+    }
+      
     if (consume(TK_IDENT))
       c++;
     else
