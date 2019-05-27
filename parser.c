@@ -48,8 +48,11 @@ int consume(int ty) {
     return 0;
   } else if (t->ty == TK_IDENT) {
     Map* m = vars_map();
+    // TODO: ステップ16ではここはエラーになるんだけど関数名
+    // の場合にはもう少し細かく見ないと判断できない
+    // ひとまずここはエラーにはせずに飲むことにする
     if (map_get(m, t->name) == NULL)
-      error("未宣言の変数です: \"%s\"", t->name);
+      map_put(m, t->name, t->name);
     pos++;
     return 1;
   } else {
