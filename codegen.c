@@ -23,6 +23,12 @@ void gen_lval(Node* node) {
 }
 
 void gen(Node* node) {
+
+  if (node->ty == ND_VARDEF) {
+    DEBUG("ND_VARDEF Found");
+    return;
+  }
+  
   if (node->ty == ND_RETURN) {
     DEBUG("ND_RETURN Found");
     gen(node->lhs);

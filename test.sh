@@ -29,15 +29,15 @@ try 47 'int main () { return 5+6*7; }'
 try 15 'int main () { return 5*(9-6); }'
 try 4 'int main () { return (3+5)/2; }'
 
-try 6 'int main () { foo = 1; bar = 2 + 3; return foo + bar; }'
-try 4 'int main () { foo = 2; return foo * foo; }'
-try 16 'int main () { foo = 2; bar = foo * foo; return bar * bar; }'
-try 14 'int main () { foo = 2; bar = foo * foo; return (bar + foo) + (bar * foo); }'
-try 35 'int main () { foo=2; bar = foo + 3; foo=7; return foo*bar; }'
+try 6 'int main () { int foo; int bar; foo = 1; bar = 2 + 3; return foo + bar; }'
+try 4 'int main () { int foo; foo = 2; return foo * foo; }'
+try 16 'int main () {int foo;int bar; foo = 2; bar = foo * foo; return bar * bar; }'
+try 14 'int main () {int foo; int bar; foo = 2; bar = foo * foo; return (bar + foo) + (bar * foo); }'
+try 35 'int main () { int  foo;int  bar; foo=2; bar = foo + 3; foo=7; return foo*bar; }'
 
 try 255 'int main () { return -1; }' # -1 ==> 255(shell)
 try 42 'int main () { return +42; }'
-try 12 'int main () { foo=-3;bar=foo*-5;return foo+bar; }'
+try 12 'int main () { int foo;int bar; foo=-3;bar=foo*-5;return foo+bar; }'
 
 try 1 'int main () { return 42 == 42; }'
 try 0 'int main () { return 42 != 42; }'
@@ -58,26 +58,26 @@ try 0 'int main () { return 4 > 5; }'
 try 0 'int main () { return 1 + 3 > 2 * 2; }'
 try 1 'int main () { return 1 + 3 >= 2 * 2; }'
 
-try 1 'int main () { a = 1; if (42 == 41) a = a + 41; return a; }'
-try 42 'int main () { a = 1; if (42 == 42) a = a + 41; return a; }'
-try 2 'int main () { a = 1; if (42 == 42) a = a + 1; else a = a + 2; return a; }'
-try 3 'int main () { a = 1; if (42 == 41) a = a + 1; else a = a + 2; return a; }'
+try 1 'int main () {int a; a = 1; if (42 == 41) a = a + 41; return a; }'
+try 42 'int main () {int a;a = 1; if (42 == 42) a = a + 41; return a; }'
+try 2 'int main () {int a; a = 1; if (42 == 42) a = a + 1; else a = a + 2; return a; }'
+try 3 'int main () { int a; a = 1; if (42 == 41) a = a + 1; else a = a + 2; return a; }'
 
-try 128 'int main () { i = 1; while (i <= 100) i = i * 2; return i; }'
+try 128 'int main () {int i; i = 1; while (i <= 100) i = i * 2; return i; }'
 
-try 10 'int main () { for (a=0;a<10;a=a+2)a;return a; }'
-try 45 'int main () { total = 0; for (i = 0; i < 10; i = i+1) total = total + i; return total; }'
-try 10 'int main () { total = 0; for (; total < 10;) total = total + 1; return total; }'
-try 10 'int main () { for (total = 0; total < 10;) total = total + 1; return total; }'
+try 10 'int main () {int a; for (a=0;a<10;a=a+2)a;return a; }'
+try 45 'int main () {int total; int i; total = 0; for (i = 0; i < 10; i = i+1) total = total + i; return total; }'
+try 10 'int main () { int total; total = 0; for (; total < 10;) total = total + 1; return total; }'
+try 10 'int main () {int total; for (total = 0; total < 10;) total = total + 1; return total; }'
 
 try 1 'int main () { {} return 1; }'
 try 3 'int main () { if (42 == 42) { return 3;} }'
 try 3 'int main () { if (42 == 42) {return 3;} else {return 5;} }'
 try 5 'int main () { if (42 == 41) {return 3;} else {return 5;} }'
-try 5 'int main () { a = 2; b = 3; if (42 == 42) {return a + b;} else {return a * b;} }'
-try 6 'int main () { a = 2; b = 3; if (42 == 41) {return a + b;} else {return a * b;} }'
-try 55 'int main () { a = 1; b = 1; n = 0 ; while (n < 8) { tmp = a; a = b; b = tmp + a; n = n + 1;} return b; }' # fib
-try 55 'int main () { total = 0; for (i = 0; i <= 10; i = i+1) { total = total + i;} return total; }' # sum
+try 5 'int main () {int a; int b; a = 2; b = 3; if (42 == 42) {return a + b;} else {return a * b;} }'
+try 6 'int main () { int a; int b; a = 2; b = 3; if (42 == 41) {return a + b;} else {return a * b;} }'
+try 55 'int main () { int a; int b; int n; int tmp; a = 1; b = 1; n = 0 ; while (n < 8) { tmp = a; a = b; b = tmp + a; n = n + 1;} return b; }' # fib
+try 55 'int main () { int total; int i; total = 0; for (i = 0; i <= 10; i = i+1) { total = total + i;} return total; }' # sum
 
 try 7 'int main () { return fun0(); }'
 try 21 'int main () { a = fun0() + fun0(); return a + fun0(); }'

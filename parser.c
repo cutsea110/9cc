@@ -35,7 +35,7 @@ Token* entry_ident() {
   if (t->ty != TK_IDENT)
     error("識別子ではないトークンです: %s", t->input);
   Map* m = vars_map();
-  if (map_exists(m, t->name))
+  if (map_get(m, t->name) != NULL)
     error("宣言済みの変数です: \"%s\"", t->name);
   map_put(m, t->name, t->name);
   pos++;
@@ -48,9 +48,8 @@ int consume(int ty) {
     return 0;
   } else if (t->ty == TK_IDENT) {
     Map* m = vars_map();
-    if (map_get(m, t->name) == NULL) {
-      map_put(m, t->name, t->name);
-    }
+    if (map_get(m, t->name) == NULL)
+      error("未宣言の変数です: \"%s\"", t->name);
     pos++;
     return 1;
   } else {
@@ -207,10 +206,8 @@ Node* decl() {
   if (!consume(TK_INT))
     error("型でないトークンです: %s", t->input);
 
-  t = tokens->data[pos];
-  if (!consume(TK_IDENT))
-    error("関数名でないトークンです: %s", t->input);
-
+  t = entry_ident();
+  
   // まだ変数か関数かは不明だが識別子だけは決定
   node->name = t->name;
 
@@ -267,8 +264,14 @@ Node* decl() {
 Node* stmt() {
   DEBUG("Entry stmt");
   Node* node;
-  
-  if (consume(TK_RETURN)) {
+
+  if (consume(TK_INT)) {
+    DEBUG("\"int\" found");
+    Token* t = entry_ident();
+    node = malloc(sizeof(Node));
+    node->ty = ND_VARDEF;
+    node->name = t->name;
+  } else if (consume(TK_RETURN)) {
     DEBUG("\"return\" found");
     node = malloc(sizeof(Node));
     node->ty = ND_RETURN;
