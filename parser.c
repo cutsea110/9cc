@@ -199,8 +199,10 @@ Node* decl() {
 
   int c = 0;
   while (!consume(')')) {
-    consume(TK_IDENT);
-    c++;
+    if (consume(TK_IDENT))
+      c++;
+    else
+      error("引数でないトークンです: %s", t->input);
     if (consume(',')) {
       continue;
     } else if (consume(')')) {
