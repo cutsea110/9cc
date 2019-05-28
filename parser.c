@@ -228,20 +228,14 @@ Node* decl() {
     Token* t = tokens->data[pos];
     error("型宣言ではないトークンです: %s", t->input);
   }
-  Token* t = entry_ident(sig);
   
-  // まだ変数か関数かは不明だが識別子だけは決定
+  Token* t = entry_ident(sig);
+  node->ty = ND_FUNDEF;
   node->name = t->name;
 
-  // 変数宣言でした
-  if (consume(';')) {
-    node->ty = ND_VARDEF;
-    return node;
-  } else if (!consume('('))
-    error("';'でも'('でもないトークンです: %s", t->input);
+  if (!consume('('))
+    error("'('ではないトークンです: %s", t->input);
 
-  // 関数定義でした
-  node->ty = ND_FUNDEF;
   current_vars = new_map();
 
   int c = 0;

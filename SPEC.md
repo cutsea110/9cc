@@ -8,7 +8,6 @@ SYNTAX
 program: decl program
 program: e
 
-decl: tsig ident ";"
 decl: tsig ident "(" (tsig expr)? ("," tsig expr)* ")" "{" stmt* "}"
 
 tsig: "int" "*"*

@@ -72,6 +72,9 @@ void DUMP_TOKENS() {
     case TK_WHILE:
       fprintf(stderr, "tokens[%d]: TK_WHILE\n", i);
       break;
+    case TK_INT:
+      fprintf(stderr, "tokens[%d]: TK_INT\n", i);
+      break;
     case TK_EOF:
       fprintf(stderr, "tokens[%d]: TK_EOF\n", i);
       break;
@@ -130,6 +133,9 @@ void dump_code(int i, Node* node, int level) {
       Node* st = blk->data[j];
       dump_code(i, st, level+1);
     }
+    break;
+  case ND_VARDEF:
+    fprintf(stderr, "ND_VARDEF: %s\n", node->name);
     break;
   case ND_FUNDEF:
     fprintf(stderr, "ND_FUNDEF: %s\n", node->name);
