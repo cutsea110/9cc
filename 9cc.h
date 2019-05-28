@@ -44,6 +44,11 @@ enum {
 };
 
 typedef struct {
+  enum { INT, PTR } ty;
+  struct Type* ptrof;
+} Type;
+
+typedef struct {
   int ty;           // トークンの型
   int val;          // tyがTK_NUMの場合その数値
   char* name;       // tyがTK_IDENTの場合その名前
