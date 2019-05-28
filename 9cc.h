@@ -75,6 +75,7 @@ typedef struct Node {
   int arg_num;      // ND_FUNDEFの場合のみ使う
   Map* local_vars;  // ND_FUNDEFの場合のみ使う
   Vector* blk;      // ND_BLOCK, ND_FUNDEFの場合のみ使う
+  Type* tsig;       // ND_VARDEF,ND_FUNDEFの場合のみ使う
 } Node;
 
 extern int roundup(int x, int align);

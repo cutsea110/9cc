@@ -232,6 +232,7 @@ Node* decl() {
   Token* t = entry_ident(sig);
   node->ty = ND_FUNDEF;
   node->name = t->name;
+  node->tsig = sig;
 
   if (!consume('('))
     error("'('ではないトークンです: %s", t->input);
@@ -240,15 +241,14 @@ Node* decl() {
 
   int c = 0;
   while (!consume(')')) {
-    if (!consume(TK_INT)) {
+    sig = tsig();
+    if (sig == NULL) {
       t = tokens->data[pos];
-      error("型でないトークンです: %s", t->input);
+      error("型宣言ではないトークンです: %s", t->input);
     }
-      
-    if (consume(TK_IDENT))
-      c++;
-    else
-      error("引数でないトークンです: %s", t->input);
+    
+    t = entry_ident(sig);
+    c++;
     
     if (consume(','))
       continue;
@@ -283,11 +283,12 @@ Node* stmt() {
 
   Type* sig = tsig();
   if (sig != NULL) {
-    DEBUG("\"int\" found");
+    DEBUG("type signature found");
     Token* t = entry_ident(sig);
     node = malloc(sizeof(Node));
     node->ty = ND_VARDEF;
     node->name = t->name;
+    node->tsig = sig;
   } else if (consume(TK_RETURN)) {
     DEBUG("\"return\" found");
     node = malloc(sizeof(Node));

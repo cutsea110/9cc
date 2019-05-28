@@ -85,6 +85,21 @@ void DUMP_TOKENS() {
   }
 }
 
+void dump_type_signature(Type* p) {
+  switch(p->ty) {
+  case TYP_INT:
+    fprintf(stderr, "int");
+    break;
+  case TYP_PTR:
+    fprintf(stderr, "pointer of ");
+    break;
+  }
+  if (p->ptrof)
+    dump_type_signature(p->ptrof);
+  else
+    return;
+}
+
 void dump_code(int i, Node* node, int level) {
   if (level == 0) {
     fprintf(stderr, "=======================\n");
@@ -136,18 +151,28 @@ void dump_code(int i, Node* node, int level) {
     break;
   case ND_VARDEF:
     fprintf(stderr, "ND_VARDEF: %s\n", node->name);
+    fprintf(stderr, "  variable type: ");
+    dump_type_signature(node->tsig);
+    fprintf(stderr, "\n");
     break;
   case ND_FUNDEF:
     fprintf(stderr, "ND_FUNDEF: %s\n", node->name);
+    fprintf(stderr, "  return type: ");
+    dump_type_signature(node->tsig);
+    fprintf(stderr, "\n");
     fprintf(stderr, "  argc: %d\n", node->arg_num);
     fprintf(stderr, "  argv: ");
     for (int j = 0; j < node->arg_num; j++) {
-      fprintf(stderr, "%s ", node->local_vars->keys->data[j]);
+      fprintf(stderr, "%s (", node->local_vars->keys->data[j]);
+      dump_type_signature(node->local_vars->vals->data[j]);
+      fprintf(stderr, ") ");
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "  local variables: ");
     for (int j = node->arg_num; j < node->local_vars->keys->len; j++) {
-      fprintf(stderr, "%s ", node->local_vars->keys->data[j]);
+      fprintf(stderr, "%s (", node->local_vars->keys->data[j]);
+      dump_type_signature(node->local_vars->vals->data[j]);
+      fprintf(stderr, ") ");
     }
     fprintf(stderr, "\n");
     break;
