@@ -43,8 +43,8 @@ enum {
       ND_LT,        // <
 };
 
-typedef struct {
-  enum { INT, PTR } ty;
+typedef struct Type {
+  enum { TYP_INT, TYP_PTR } ty;
   struct Type* ptrof;
 } Type;
 

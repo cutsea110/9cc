@@ -12,7 +12,7 @@ Vector* tokenize(char* p);
 
 void program();
 Node* decl();
-Node* tsig();
+Type* tsig();
 Node* stmt();
 Node* expr();
 Node* assign();
@@ -31,14 +31,14 @@ int is_alnum(char c) {
   return isalpha(c) || isdigit(c) || c == '_';
 }
 
-Token* entry_ident() {
+Token* entry_ident(Type* sig) {
   Token* t = tokens->data[pos];
   if (t->ty != TK_IDENT)
     error("識別子ではないトークンです: %s", t->input);
   Map* m = vars_map();
   if (map_get(m, t->name) != NULL)
     error("宣言済みの変数です: \"%s\"", t->name);
-  map_put(m, t->name, t->name);
+  map_put(m, t->name, sig);
   pos++;
   return t;
 }
@@ -203,14 +203,28 @@ void program() {
   code[i] = NULL;
 }
 
+Type* tsig() {
+  Token* t = tokens->data[pos];
+  if (!consume(TK_INT))
+    return NULL;
+
+  Type* sig = malloc(sizeof(Type));
+  sig->ty = TYP_INT;
+  sig->ptrof = NULL;
+  while (consume('*')) {
+    Type* p = malloc(sizeof(Type));
+    p->ty = TYP_PTR;
+    p->ptrof = sig;
+    sig = p;
+  }
+  return sig;
+}
+
 Node* decl() {
   Node* node = malloc(sizeof(Node));
 
-  Token* t = tokens->data[pos];
-  if (!consume(TK_INT))
-    error("型でないトークンです: %s", t->input);
-
-  t = entry_ident();
+  Type* sig = tsig();
+  Token* t = entry_ident(sig);
   
   // まだ変数か関数かは不明だが識別子だけは決定
   node->name = t->name;
@@ -269,9 +283,10 @@ Node* stmt() {
   DEBUG("Entry stmt");
   Node* node;
 
-  if (consume(TK_INT)) {
+  Type* sig = tsig();
+  if (sig != NULL) {
     DEBUG("\"int\" found");
-    Token* t = entry_ident();
+    Token* t = entry_ident(sig);
     node = malloc(sizeof(Node));
     node->ty = ND_VARDEF;
     node->name = t->name;
