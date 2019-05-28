@@ -12,6 +12,7 @@ Vector* tokenize(char* p);
 
 void program();
 Node* decl();
+Node* tsig();
 Node* stmt();
 Node* expr();
 Node* assign();

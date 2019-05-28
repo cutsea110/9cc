@@ -8,10 +8,12 @@ SYNTAX
 program: decl program
 program: e
 
-decl: "int" ident ";"
-decl: "int" ident "(" ("int" expr)? ("," "int" expr)* ")" "{" stmt* "}"
+decl: tsig ident ";"
+decl: tsig ident "(" (tsig expr)? ("," tsig expr)* ")" "{" stmt* "}"
 
-stmt: "int" ident ";"
+tsig: "int" ("*")*
+
+stmt: tsig ident ";"
 stmt: expr ";"
 stmt: "{" stmt* "}"
 stmt: "return" expr ";"
