@@ -224,6 +224,10 @@ Node* decl() {
   Node* node = malloc(sizeof(Node));
 
   Type* sig = tsig();
+  if (sig == NULL) {
+    Token* t = tokens->data[pos];
+    error("型宣言ではないトークンです: %s", t->input);
+  }
   Token* t = entry_ident(sig);
   
   // まだ変数か関数かは不明だが識別子だけは決定
