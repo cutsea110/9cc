@@ -516,7 +516,7 @@ Node* unary() {
   }
   if (consume('*')) {
     DEBUG("'*' Found");
-    return new_node(ND_DEREF, term(), NULL);
+    return new_node(ND_DEREF, unary(), NULL);
   }
   if (consume('&')) {
     DEBUG("'&' Found");

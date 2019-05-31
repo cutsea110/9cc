@@ -46,7 +46,7 @@ mul: mul "/" unary
 
 unary: "+" term
 unary: "-" term
-unary: "*" term
+unary: "*" unary ## TODO
 unary: "&" term
 unary: term
 
