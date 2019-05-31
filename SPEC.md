@@ -46,6 +46,8 @@ mul: mul "/" unary
 
 unary: "+" term
 unary: "-" term
+unary: "*" term
+unary: "&" term
 unary: term
 
 term: num

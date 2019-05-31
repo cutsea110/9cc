@@ -169,7 +169,7 @@ Vector* tokenize(char* p) {
       continue;
     }
     
-    if (strchr("+-*/(){}=,;", *p)) {
+    if (strchr("+-*/(){}=,&;", *p)) {
       add_token(v, *p, p);
       p++;
       continue;
@@ -513,6 +513,14 @@ Node* unary() {
   if (consume('-')) {
     DEBUG("'-' Found");
     return new_node('-', new_node_num(0), term());
+  }
+  if (consume('*')) {
+    DEBUG("'*' Found");
+    return new_node(ND_DEREF, term(), NULL);
+  }
+  if (consume('&')) {
+    DEBUG("'&' Found");
+    return new_node(ND_REF, term(), NULL);
   }
   return term();
 }
