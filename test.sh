@@ -105,4 +105,9 @@ try 55 'int main () { return fib(9); } int fib (int n){ if (n < 2) return 1; els
 try 89 'int main () { return fib(10); } int fib (int n){ if (n < 2) return 1; else return fib(n-1) + fib(n-2); }'
 try 120 'int main () {return fact(5);} int fact(int n) { if (n <= 1) { return 1; } else { return n * fact (n-1); }}'
 
+try 3 'int main() { int x; x = 3; int* y; y = &x; return *y; }'
+try 5 'int main() {int x; x = 3; int* y; y = &x; x = 5; return *y;}'
+try 8 'int main() {int x; x = 3; int* y; y = &x; x = 5; return *y + 3;}'
+try 8 'int main() {int x; x = 3; int* y; y = &x; x = 5; return 3+*y;}'
+
 echo OK

@@ -42,7 +42,7 @@ void gen(Node* node) {
 
   if (node->ty == ND_REF) {
     DEBUG("ND_REF Found");
-    // TODO
+    gen_lval(node->lhs);
     return;
   }
   
