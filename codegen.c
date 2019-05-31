@@ -8,18 +8,18 @@ int label_count = 0;
 char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 
 void gen_lval(Node* node) {
-  if (node->ty != ND_IDENT)
+  if (node->ty == ND_IDENT) {
+    Map* m = vars_map();
+    int offset = map_exists(m, node->name);
+    if (offset == -1) {
+      error("\"%s\" NOT Found in symbol table", node->name);
+    }
+    DEBUG("\"%s\" Found with offset(%d)", node->name, offset);
+    printf("  mov rax, rbp\n");
+    printf("  sub rax, %d\n", (offset + 1) * 8);
+    printf("  push rax\n");
+  } else
     error("代入の左辺値が変数ではありません");
-
-  Map* m = vars_map();
-  int offset = map_exists(m, node->name);
-  if (offset == -1) {
-    error("\"%s\" NOT Found in symbol table", node->name);
-  }
-  DEBUG("\"%s\" Found with offset(%d)", node->name, offset);
-  printf("  mov rax, rbp\n");
-  printf("  sub rax, %d\n", (offset + 1) * 8);
-  printf("  push rax\n");
 }
 
 void gen(Node* node) {
