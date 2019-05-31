@@ -59,10 +59,5 @@ int main(int argc, char** argv) {
     printf("  pop rax\n");
   }
 
-  // エピローグ
-  // 最後の式の結果がraxに残っているはずなのでそれが返り値になる
-  printf("  mov rsp, rbp\n");
-  printf("  pop rbp\n");
-  printf("  ret\n");
   return 0;
 }
