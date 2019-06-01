@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int fun0 () {
   printf("Success to call fun1!\n");
@@ -39,3 +40,10 @@ int twice(int n) {
   return n * n;
 }
 
+void alloc4(int* p, int w, int x, int y, int z) {
+  p = malloc(sizeof(int) * 4);
+  p[0] = w;
+  p[1] = x;
+  p[2] = y;
+  p[3] = z;
+}
