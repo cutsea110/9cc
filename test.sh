@@ -110,5 +110,6 @@ try 5 'int main() {int x; x = 3; int* y; y = &x; x = 5; return *y;}'
 try 8 'int main() {int x; x = 3; int* y; y = &x; x = 5; return *y + 3;}'
 try 8 'int main() {int x; x = 3; int* y; y = &x; x = 5; return 3+*y;}'
 try 3 'int main() { int x; x = 3; int* y; y = &x; int** z; z = &y; return **z; }'
+try 5 'int main() { int x; x = 3; int* y; y = &x; *y = 5; return x; }'
 
 echo OK
