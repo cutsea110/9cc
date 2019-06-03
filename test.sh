@@ -112,7 +112,7 @@ try 8 'int main() {int x; x = 3; int* y; y = &x; x = 5; return 3+*y;}'
 try 3 'int main() { int x; x = 3; int* y; y = &x; int** z; z = &y; return **z; }'
 try 5 'int main() { int x; x = 3; int* y; y = &x; *y = 5; return x; }'
 
-try 4 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+2;return *q;}'
-try 8 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+3;return *q;}'
+try 4 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+8;return *q;}'
+try 8 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+12;return *q;}'
 
 echo OK
