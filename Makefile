@@ -1,6 +1,6 @@
 # CFLAGS=-Wall -std=c11
 SRCS=$(wildcard *.c)
-OBJS=$(SRCS:.c=.o)
+OBJS=$(filter-out alloc_test.o,$(SRCS:.c=.o))
 
 9cc: $(OBJS)
 	$(CC) -o 9cc $(OBJS) $(LDFLAGS)
