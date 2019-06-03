@@ -115,5 +115,4 @@ try 5 'int main() { int x; x = 3; int* y; y = &x; *y = 5; return x; }'
 try 4 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+2;return *q;}'
 try 8 'int main(){int *p;alloc4(&p,1,2,4,8);int *q;q=p+3;return *q;}'
 
-
 echo OK
