@@ -87,16 +87,13 @@ void DEBUG(char* fmt, ...);
 void DUMP_TOKENS();
 void DUMP_CODES();
 
-extern Vector* new_vector();
-extern void vec_push(Vector*, void*);
+Vector* new_vector();
+void vec_push(Vector* vec, void* elem);
 
-extern Vector* new_vector();
-extern void vec_push(Vector* vec, void* elem);
-
-extern Map* new_map();
-extern void map_put(Map* map, char* key, void* val);
-extern void* map_get(Map* map, char* key);
-extern int map_exists(Map* map, char* key);
+Map* new_map();
+void map_put(Map* map, char* key, void* val);
+void* map_get(Map* map, char* key);
+int map_exists(Map* map, char* key);
 
 extern void runtest();
 
