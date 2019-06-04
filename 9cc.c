@@ -7,10 +7,10 @@
 
 #include "9cc.h"
 
-Map* global_vars;
-Map* current_vars;
+extern Map* global_vars;
+extern Map* current_vars;
 
-Map* vars_map() {
+extern Map* vars_map() {
   return current_vars != NULL ? current_vars : global_vars;
 }
 
