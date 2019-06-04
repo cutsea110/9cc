@@ -53,7 +53,7 @@ enum {
 
 typedef struct Type {
   int ty;
-  struct Type* ptrof;
+  struct Type* ptr_to;
   int size;
 } Type;
 
@@ -103,6 +103,7 @@ int map_exists(Map* map, char* key);
 
 void runtest();
 
+Type* ptr_to(Type* base);
 Type* int_ty();
 
 Token* add_token(Vector* v, int ty, char* p);

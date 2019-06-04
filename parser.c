@@ -208,11 +208,11 @@ Type* tsig() {
 
   Type* sig = malloc(sizeof(Type));
   sig->ty = INT;
-  sig->ptrof = NULL;
+  sig->ptr_to = NULL;
   while (consume('*')) {
     Type* p = malloc(sizeof(Type));
     p->ty = PTR;
-    p->ptrof = sig;
+    p->ptr_to = sig;
     sig = p;
   }
   return sig;

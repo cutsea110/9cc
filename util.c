@@ -19,7 +19,7 @@ extern Type* ptr_to(Type* base) {
   Type* ret = malloc(sizeof(Type));
   ret->ty = PTR;
   ret->size = 8;
-  ret->ptrof = base;
+  ret->ptr_to = base;
   return ret;
 }
 
@@ -113,8 +113,8 @@ void dump_type_signature(Type* p) {
     fprintf(stderr, "pointer of ");
     break;
   }
-  if (p->ptrof)
-    dump_type_signature(p->ptrof);
+  if (p->ptr_to)
+    dump_type_signature(p->ptr_to);
   else
     return;
 }
