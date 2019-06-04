@@ -103,6 +103,8 @@ int map_exists(Map* map, char* key);
 
 void runtest();
 
+Type* int_ty();
+
 Token* add_token(Vector* v, int ty, char* p);
 Vector* tokenize(char* p);
 void program();

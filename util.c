@@ -8,6 +8,25 @@ extern int roundup(int x, int align) {
   return (x + align - 1) & ~(align - 1);
 }
 
+Type* new_ty(int ty, int size) {
+  Type* ret = malloc(sizeof(Type));
+  ret->ty = ty;
+  ret->size = size;
+  return ret;
+}
+
+extern Type* ptr_to(Type* base) {
+  Type* ret = malloc(sizeof(Type));
+  ret->ty = PTR;
+  ret->size = 8;
+  ret->ptrof = base;
+  return ret;
+}
+
+extern Type* int_ty() {
+  return new_ty(INT, 4);
+}
+
 // エラーを報告するための関数
 // printfと同じ引数を取る
 extern void error(char* fmt, ...) {
