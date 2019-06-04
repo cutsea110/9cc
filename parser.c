@@ -206,14 +206,9 @@ Type* tsig() {
   if (!consume(TK_INT))
     return NULL;
 
-  Type* sig = malloc(sizeof(Type));
-  sig->ty = INT;
-  sig->ptr_to = NULL;
+  Type* sig = int_ty();
   while (consume('*')) {
-    Type* p = malloc(sizeof(Type));
-    p->ty = PTR;
-    p->ptr_to = sig;
-    sig = p;
+    sig = ptr_to(sig);
   }
   return sig;
 }
