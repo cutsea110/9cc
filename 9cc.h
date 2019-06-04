@@ -48,6 +48,7 @@ enum {
 typedef struct Type {
   enum { TYP_INT, TYP_PTR } ty;
   struct Type* ptrof;
+  int size;
 } Type;
 
 typedef struct {
