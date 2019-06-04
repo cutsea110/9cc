@@ -14,12 +14,15 @@ extern Map* vars_map() {
   return current_vars != NULL ? current_vars : global_vars;
 }
 
-Vector* tokens;
-int pos = 0;
-Node* code[100];
-int debug_flg = 0;
+extern Vector* tokens;
+extern int pos;
+extern Node* code[100];
+extern int debug_flg;
 
 int main(int argc, char** argv) {
+  pos = 0;
+  debug_flg = 0;
+  
   char* test = "-test";
   char* debug = "-d";
   char* prog_code = argv[1];

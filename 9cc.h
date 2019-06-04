@@ -108,8 +108,8 @@ Map* global_vars;
 Map* current_vars;
 Map* vars_map();
 
-extern Vector* tokens;
-extern int pos;
-extern Node* code[100];
-extern int debug_flg;
-extern int label_count;
+Vector* tokens;
+int pos;
+Node* code[100];
+int debug_flg;
+int label_count;
