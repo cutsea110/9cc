@@ -4,13 +4,13 @@
 
 #include "9cc.h"
 
-int roundup(int x, int align) {
+extern int roundup(int x, int align) {
   return (x + align - 1) & ~(align - 1);
 }
 
 // エラーを報告するための関数
 // printfと同じ引数を取る
-void error(char* fmt, ...) {
+extern void error(char* fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   vfprintf(stderr, fmt, ap);
@@ -18,7 +18,7 @@ void error(char* fmt, ...) {
   exit(1);
 }
 
-void DEBUG(char* fmt, ...) {
+extern void DEBUG(char* fmt, ...) {
   if (debug_flg) {
     va_list ap;
     fprintf(stderr, "DEBUG: ");
@@ -29,7 +29,7 @@ void DEBUG(char* fmt, ...) {
   return;
 }
 
-void DUMP_TOKENS() {
+extern void DUMP_TOKENS() {
   for (int i = 0; i < tokens->len; i++) {
     Token* t = tokens->data[i];
     switch(t->ty) {
@@ -216,7 +216,7 @@ void dump_code(int i, Node* node, int level) {
   }
 }
 
-void DUMP_CODES() {
+extern void DUMP_CODES() {
   for (int i = 0; code[i]; i++) {
     Node* node = code[i];
     dump_code(i, node, 0);

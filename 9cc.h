@@ -81,11 +81,11 @@ typedef struct Node {
   Type* tsig;       // ND_VARDEF,ND_FUNDEFの場合のみ使う
 } Node;
 
-extern int roundup(int x, int align);
-extern void error(char* fmt, ...);
-extern void DEBUG(char* fmt, ...);
-extern void DUMP_TOKENS();
-extern void DUMP_CODES();
+int roundup(int x, int align);
+void error(char* fmt, ...);
+void DEBUG(char* fmt, ...);
+void DUMP_TOKENS();
+void DUMP_CODES();
 
 extern Vector* new_vector();
 extern void vec_push(Vector*, void*);
