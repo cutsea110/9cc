@@ -87,10 +87,10 @@ extern void DUMP_TOKENS() {
 
 void dump_type_signature(Type* p) {
   switch(p->ty) {
-  case TYP_INT:
+  case INT:
     fprintf(stderr, "int");
     break;
-  case TYP_PTR:
+  case PTR:
     fprintf(stderr, "pointer of ");
     break;
   }

@@ -45,8 +45,14 @@ enum {
       ND_LT,        // <
 };
 
+enum {
+      VOID = 1,
+      INT,
+      PTR,
+};
+
 typedef struct Type {
-  enum { TYP_INT, TYP_PTR } ty;
+  int ty;
   struct Type* ptrof;
   int size;
 } Type;
