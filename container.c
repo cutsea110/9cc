@@ -102,7 +102,7 @@ void test_map() {
   printf("Map OK\n");
 }
 
-void runtest() {
+extern void runtest() {
   test_vector();
   test_map();
   printf("OK\n");

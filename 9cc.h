@@ -95,14 +95,14 @@ void map_put(Map* map, char* key, void* val);
 void* map_get(Map* map, char* key);
 int map_exists(Map* map, char* key);
 
-extern void runtest();
+void runtest();
 
-extern Token* add_token(Vector* v, int ty, char* p);
-extern Vector* tokenize(char* p);
-extern void program();
+Token* add_token(Vector* v, int ty, char* p);
+Vector* tokenize(char* p);
+void program();
 
-extern void gen_lval(Node* node);
-extern void gen(Node* node);
+void gen_lval(Node* node);
+void gen(Node* node);
 
 extern Map* global_vars;
 extern Map* current_vars;

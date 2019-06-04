@@ -8,8 +8,6 @@
 int is_alnum(char c);
 int consume(int ty);
 
-Vector* tokenize(char* p);
-
 void program();
 Node* decl();
 Type* tsig();
@@ -62,7 +60,7 @@ int consume(int ty) {
   }
 }
 
-Token* add_token(Vector* v, int ty, char* p) {
+extern Token* add_token(Vector* v, int ty, char* p) {
   Token* t = malloc(sizeof(Token));
   t->ty = ty;
   t->input = p;
@@ -71,7 +69,7 @@ Token* add_token(Vector* v, int ty, char* p) {
 }
 
 // pが指している文字列をトークンに分割してtokensに保存する
-Vector* tokenize(char* p) {
+extern Vector* tokenize(char* p) {
   Vector* v = new_vector();
   
   while (*p) {
@@ -193,7 +191,7 @@ Vector* tokenize(char* p) {
   return v;
 }
 
-void program() {
+extern void program() {
   DEBUG("Entry program");
   int i = 0;
   while (((Token*)tokens->data[pos])->ty != TK_EOF) {

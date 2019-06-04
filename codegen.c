@@ -7,7 +7,7 @@
 int label_count = 0;
 char* regs[] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 
-void gen_lval(Node* node) {
+extern void gen_lval(Node* node) {
   if (node->ty == ND_IDENT) {
     Map* m = vars_map();
     int offset = map_exists(m, node->name);
@@ -24,7 +24,7 @@ void gen_lval(Node* node) {
     error("代入の左辺値が変数ではありません");
 }
 
-void gen(Node* node) {
+extern void gen(Node* node) {
 
   if (node->ty == ND_VARDEF) {
     DEBUG("ND_VARDEF Found");
