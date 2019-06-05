@@ -16,9 +16,7 @@ Type* new_ty(int ty, int size) {
 }
 
 extern Type* ptr_to(Type* base) {
-  Type* ret = malloc(sizeof(Type));
-  ret->ty = PTR;
-  ret->size = 8;
+  Type* ret = new_ty(PTR, 8);
   ret->ptr_to = base;
   return ret;
 }
